@@ -1438,8 +1438,28 @@ const APP_VERSION = "1.9";
           
           <div class="token-data-item">
             <div class="token-info-section">
+              <p><span class="token-key">AI Provider :</span></p>
+              <select id="ai-provider" class="token-value" style="width:100%;margin:6px 0;padding:6px;background:#2a2a2a;color:#fff;border:1px solid #333;border-radius:4px;">
+                <option value="omp">OMP (muse-spark via gateway)</option>
+                <option value="gemini">Gemini (API key)</option>
+              </select>
+              <input id="omp-endpoint" class="token-value" placeholder="http://127.0.0.1:4000/v1" style="width:100%;margin:6px 0;padding:6px;background:#2a2a2a;color:#fff;border:1px solid #333;border-radius:4px;" />
+              <input id="omp-token" class="token-value" type="password" placeholder="Gateway token (~/.omp/auth-gateway.token, kosong bila --no-auth)" style="width:100%;margin:6px 0;padding:6px;background:#2a2a2a;color:#fff;border:1px solid #333;border-radius:4px;" />
+              <input id="omp-model" class="token-value" placeholder="opencode-zen/muse-spark-1.3-contributor-free" style="width:100%;margin:6px 0;padding:6px;background:#2a2a2a;color:#fff;border:1px solid #333;border-radius:4px;" />
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+                <button id="check-omp-btn" class="version-btn" style="flex:1;">
+                  <i class="fas fa-plug"></i> Cek Gateway
+                </button>
+                <span id="omp-status" class="token-value" style="font-size:12px;">-</span>
+              </div>
+              <p style="color:#999;font-size:11px;margin-top:6px;">Jalankan <code>omp auth-gateway serve</code> agar provider OMP aktif.</p>
+            </div>
+          </div>
+          
+          <div class="token-data-item">
+            <div class="token-info-section">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <p><span class="token-key">Gemini AI :</span></p>
+                <p><span class="token-key">AI Assistant :</span></p>
                 <label class="switch">
                   <input type="checkbox" id="gemini-toggle" ${
                     localStorage.getItem("gemini_enabled") === "true"
@@ -1590,6 +1610,48 @@ const APP_VERSION = "1.9";
       });
     }
 
+    const aiProviderSel = document.getElementById("ai-provider");
+    const ompEndpointInput = document.getElementById("omp-endpoint");
+    const ompModelInput = document.getElementById("omp-model");
+    const ompStatus = document.getElementById("omp-status");
+    const checkOmpBtn = document.getElementById("check-omp-btn");
+    if (window.mentariAI) {
+      if (aiProviderSel) {
+        aiProviderSel.value = window.mentariAI.getProvider();
+        aiProviderSel.addEventListener("change", function () {
+          window.mentariAI.setProvider(this.value);
+        });
+      }
+      if (ompEndpointInput) {
+        ompEndpointInput.value = window.mentariAI.getOmpEndpoint();
+        ompEndpointInput.addEventListener("change", function () {
+          window.mentariAI.setOmpEndpoint(this.value);
+        });
+      }
+      const ompTokenInput = document.getElementById("omp-token");
+      if (ompTokenInput && window.mentariAI.getOmpToken) {
+        ompTokenInput.value = window.mentariAI.getOmpToken();
+        ompTokenInput.addEventListener("change", function () {
+          window.mentariAI.setOmpToken(this.value.trim());
+        });
+      }
+      if (ompModelInput) {
+        ompModelInput.value = window.mentariAI.getOmpModel();
+        ompModelInput.addEventListener("change", function () {
+          window.mentariAI.setOmpModel(this.value);
+        });
+      }
+      if (checkOmpBtn) {
+        checkOmpBtn.addEventListener("click", async function () {
+          if (ompStatus) ompStatus.textContent = "mengecek...";
+          const res = await window.mentariAI.checkOmpGateway(ompEndpointInput && ompEndpointInput.value);
+          if (ompStatus) {
+            ompStatus.textContent = res.ok ? "terhubung (" + res.models.length + " model)" : "gagal: " + res.message;
+            ompStatus.style.color = res.ok ? "#4CAF50" : "#f44336";
+          }
+        });
+      }
+    }
     const updateApiKeyBtn = document.getElementById("update-api-key");
     if (updateApiKeyBtn) {
       updateApiKeyBtn.addEventListener("click", function () {

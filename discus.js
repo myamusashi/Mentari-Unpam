@@ -21,7 +21,6 @@
     mode = "default",
     prevAnswer = ""
   ) {
-    const GEMINI_API_KEY = getGeminiApiKey();
     let prompt = "";
 
     if (mode === "default") {
@@ -39,6 +38,11 @@
       prompt = `Ubah jawaban berikut menjadi nomor, tetap natural dan mudah dipahami, tanpa bullet atau paragraf:\n\n${prevAnswer}`;
     }
 
+    if (typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini") {
+      return await window.mentariAI.askOmp(prompt, { temperature: 0.7, maxTokens: 2500 }).catch(() => "Tidak ada jawaban dari AI.");
+    }
+
+    const GEMINI_API_KEY = getGeminiApiKey();
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
@@ -158,31 +162,34 @@
               }
 
               const prompt = `Bacalah diskusi berikut, lalu buatkan beberapa saran pertanyaan yang natural, relevan, dan menarik untuk diajukan pada diskusi ini. Hindari bullet, penomoran, dan buat seolah-olah pertanyaan dari manusia. Pisahkan setiap pertanyaan dengan baris baru. Pastikan setiap saran pertanyaan berdiri sendiri, tidak saling terhubung, dan tidak menggunakan kata penghubung seperti 'selain itu', 'terus', 'dan' di awal kalimat.\n\n${content}\n\nSaran pertanyaan:`;
-              const GEMINI_API_KEY = getGeminiApiKey();
-              const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: {
-                      temperature: 0.7,
-                      maxOutputTokens: 512,
-                      topP: 0.95,
-                      topK: 40,
-                    },
-                  }),
-                }
-              );
-              if (!response.ok)
-                throw new Error(
-                  "Gagal mendapatkan saran pertanyaan dari Gemini"
+              let saran = await window.mentariAI.askAI(prompt, { temperature: 0.7, maxTokens: 2500 }).catch(() => "");
+              if (!saran) {
+                const GEMINI_API_KEY = getGeminiApiKey();
+                const response = await fetch(
+                  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      contents: [{ parts: [{ text: prompt }] }],
+                      generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 512,
+                        topP: 0.95,
+                        topK: 40,
+                      },
+                    }),
+                  }
                 );
-              const data = await response.json();
-              let saran =
-                data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-                "Tidak ada saran pertanyaan.";
+                if (!response.ok)
+                  throw new Error(
+                    "Gagal mendapatkan saran pertanyaan dari Gemini"
+                  );
+                const data = await response.json();
+                saran =
+                  data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+                  "Tidak ada saran pertanyaan.";
+              }
               // Pisahkan saran per baris dan ambil maksimal 5 saran
               let saranArr = saran.split(/\n+/).filter(Boolean).slice(0, 5);
               // Tampilkan hasil di bawah tombol

@@ -9,7 +9,15 @@
       "strict_min_version": "109.0"
     }
   },
-  "permissions": ["scripting", "activeTab"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Mentari Mod",
+    "default_icon": "icon.png"
+  },
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
   "host_permissions": [
     "https://mentari.unpam.ac.id/*",
     "https://my.unpam.ac.id/*",
@@ -18,61 +26,88 @@
     "http://127.0.0.1/*",
     "http://localhost/*"
   ],
-  "action": {
-    "default_popup": "src/popup/popup.html",
-    "default_icon": "src/assets/icon.png"
-  },
   "content_scripts": [
     {
-      "matches": ["https://mentari.unpam.ac.id/*"],
-      "exclude_matches": ["https://mentari.unpam.ac.id/login*"],
+      "matches": [
+        "https://mentari.unpam.ac.id/*"
+      ],
+      "exclude_matches": [
+        "https://mentari.unpam.ac.id/login*"
+      ],
       "js": [
-        "src/content/ompProvider.js",
-        "src/content/apiKeyManager.js",
-        "src/content/token.js",
-        "src/content/content.js"
+        "ompProvider.js",
+        "apiKeyManager.js",
+        "content.js",
+        "gemini.js"
       ]
     },
     {
-      "matches": ["https://mentari.unpam.ac.id/login*"],
-      "js": ["src/content/home.js"]
+      "matches": [
+        "https://mentari.unpam.ac.id/*"
+      ],
+      "js": [
+        "home.js"
+      ]
     },
     {
-      "matches": ["https://mentari.unpam.ac.id/u-courses/*/exam/*"],
-      "js": ["src/content/ompProvider.js", "src/content/quiz.js"]
+      "matches": [
+        "https://mentari.unpam.ac.id/u-courses/*/exam/*"
+      ],
+      "js": [
+        "ompProvider.js",
+        "quiz.js"
+      ]
     },
     {
-      "matches": ["https://mentari.unpam.ac.id/u-courses/*/kuesioner/*"],
-      "js": ["src/content/kuisioner.js"]
+      "matches": [
+        "https://mentari.unpam.ac.id/u-courses/*/kuesioner/*"
+      ],
+      "js": [
+        "kuisioner.js"
+      ]
     },
     {
-      "matches": ["https://mentari.unpam.ac.id/u-courses/*/forum/*/topics/*"],
-      "js": ["src/content/ompProvider.js", "src/content/discus.js"]
+      "matches": [
+        "https://mentari.unpam.ac.id/u-courses/*/forum/*/topics/*"
+      ],
+      "js": [
+        "ompProvider.js",
+        "discus.js"
+      ]
     },
     {
-      "matches": ["https://my.unpam.ac.id/*"],
-      "exclude_matches": ["https://my.unpam.ac.id/login*"],
-      "js": ["src/content/presensi.js", "src/content/QuickSurvey.js"]
+      "matches": [
+        "https://my.unpam.ac.id/*"
+      ],
+      "exclude_matches": [
+        "https://my.unpam.ac.id/login*"
+      ],
+      "js": [
+        "presensi.js",
+        "QuickSurvey.js"
+      ]
     },
     {
       "matches": [
         "https://my.unpam.ac.id/login*",
         "https://mentari.unpam.ac.id/login*"
       ],
-      "js": ["src/content/pw.js"]
+      "js": [
+        "pw.js"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "src/content/token.js",
-        "src/content/apiKeyManager.js",
-        "src/content/ompProvider.js",
-        "src/assets/background.png",
-        "pet.html",
-        "pet.js"
+        "token.js",
+        "apiKeyManager.js",
+        "ompProvider.js"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "https://mentari.unpam.ac.id/*",
+        "https://my.unpam.ac.id/*"
+      ]
     }
   ],
   "icons": {

@@ -30,7 +30,9 @@
   }
 
   try {
-    const GEMINI_API_KEY = getGeminiApiKey();
+    const useOmpQuiz =
+      typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini";
+    const GEMINI_API_KEY = useOmpQuiz ? null : getGeminiApiKey();
 
     function createPopup() {
       const popup = document.createElement("div");
@@ -207,30 +209,8 @@ Format jawaban akhir sebagai: "Jawaban: [huruf]"`;
 
         while (retries > 0 && !geminiResult) {
           try {
-            const response = await fetch(
-              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  contents: [{ parts: [{ text: prompt }] }],
-                  generationConfig: {
-                    temperature: 0.9, // Lebih deterministik
-                    maxOutputTokens: 1536,
-                    topP: 0.95,
-                    topK: 40,
-                  },
-                }),
-              }
-            );
-
-            if (!response.ok) {
-              console.error(`API error: ${response.status}`);
-              throw new Error(`API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            geminiResult = data;
+            const answerText0 = await window.mentariAI.askAI(prompt, { temperature: 0.9, maxTokens: 3000 });
+            geminiResult = { candidates: [{ content: { parts: [{ text: answerText0 }] } }] };
           } catch (error) {
             console.warn(`Retry ${4 - retries}/3: ${error.message}`);
             retries--;

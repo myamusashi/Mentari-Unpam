@@ -1,9 +1,15 @@
 document.getElementById("runToken").addEventListener("click", async () => {
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const extApi = globalThis.browser ?? globalThis.chrome;
+  if (!extApi?.tabs?.query || !extApi?.scripting?.executeScript) {
+    alert("Ekstensi tidak dapat dijalankan di halaman ini!");
+    return;
+  }
 
-  chrome.scripting.executeScript({
+  let [tab] = await extApi.tabs.query({ active: true, currentWindow: true });
+
+  extApi.scripting.executeScript({
     target: { tabId: tab.id },
-    function: () => {
+    func: () => {
       if (window.runToken) {
         window.runToken();
       } else {

@@ -332,9 +332,9 @@ function createQuickSurveyPopup() {
 }
 
 function setupQuickSurveyEventListeners() {
-  // Check if we're in a Chrome extension context
-  const isExtension =
-    typeof chrome !== "undefined" && chrome.tabs && chrome.scripting;
+  // Check if we're in an extension context (Chrome or Firefox)
+  const extApi = globalThis.browser ?? globalThis.chrome;
+  const isExtension = Boolean(extApi?.tabs?.query && extApi?.scripting?.executeScript);
 
   // Event listeners for star rating buttons
   document.querySelectorAll(".star-btn").forEach((button) => {
@@ -343,10 +343,10 @@ function setupQuickSurveyEventListeners() {
       console.log(`Star ${rating} button clicked`); // Debug log
 
       if (isExtension) {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          chrome.scripting.executeScript({
+        extApi.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          extApi.scripting.executeScript({
             target: { tabId: tabs[0].id },
-            function: automateFlow,
+            func: automateFlow,
             args: [`star${rating}`],
           });
         });
@@ -383,10 +383,10 @@ function setupQuickSurveyEventListeners() {
         console.log(`${id} button clicked`); // Debug log
 
         if (isExtension) {
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            chrome.scripting.executeScript({
+          extApi.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            extApi.scripting.executeScript({
               target: { tabId: tabs[0].id },
-              function: automateFlow,
+              func: automateFlow,
               args: [mode],
             });
           });
