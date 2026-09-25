@@ -196,9 +196,10 @@ if (window.location.href === "https://mentari.unpam.ac.id/login") {
           changelog.style.cssText =
             "width:100%; margin:10px 0; box-sizing:border-box;";
           let petUrl = "pet.html";
+          const extApi = globalThis.browser ?? globalThis.chrome;
           try {
-            if (typeof chrome !== "undefined" && chrome.runtime && typeof chrome.runtime.getURL === "function") {
-              petUrl = chrome.runtime.getURL("pet.html");
+            if (extApi?.runtime?.getURL) {
+              petUrl = extApi.runtime.getURL("pet.html");
             }
           } catch (_) {
             // Extension context invalidated, fallback ke path relatif

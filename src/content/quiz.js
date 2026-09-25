@@ -198,6 +198,14 @@ Penting:
       const data = await res.json();
       return data?.data ? data : null;
     },
+    useOmpProvider() {
+      try {
+        return typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini";
+      } catch (_) {
+        return false;
+      }
+    },
+
 
     // Proses soal dalam kelompok kecil (5 soal per request) untuk akurasi maksimal
     async askGeminiBatch(apiKey, questions) {
@@ -243,30 +251,35 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
 
         while (retries >= 0 && !chunkSuccess) {
           try {
-            const res = await fetch(
-              `${Config.GEMINI.ENDPOINT}/${model}:generateContent?key=${apiKey}`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  contents: [{ parts: [{ text: prompt }] }],
-                  generationConfig: {
-                    temperature: 0.1, // Sangat rendah untuk akurasi maksimal/deterministik
-                    topP: 0.1,
-                    maxOutputTokens: 2048,
-                  },
-                }),
-              },
-            );
+            let text = "";
+            if (this.useOmpProvider()) {
+              text = await window.mentariAI.askAI(prompt, { temperature: 0.1, maxTokens: 3000 });
+            } else {
+              const res = await fetch(
+                `${Config.GEMINI.ENDPOINT}/${model}:generateContent?key=${apiKey}`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                      temperature: 0.1, // Sangat rendah untuk akurasi maksimal/deterministik
+                      topP: 0.1,
+                      maxOutputTokens: 2048,
+                    },
+                  }),
+                },
+              );
 
-            if (!res.ok) {
-              if (res.status === 429) Utils.updateModelLimit(model, true);
-              throw new Error(`API Error ${res.status}`);
+              if (!res.ok) {
+                if (res.status === 429) Utils.updateModelLimit(model, true);
+                throw new Error(`API Error ${res.status}`);
+              }
+              Utils.updateQuota(res.headers);
+              Utils.updateModelLimit(model, false);
+              const data = await res.json();
+              text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
             }
-            Utils.updateQuota(res.headers);
-            Utils.updateModelLimit(model, false);
-            const data = await res.json();
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
             // Ekstrak jawaban dari chunk ini
             chunk.forEach((_, j) => {
@@ -882,9 +895,10 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
         .catch(() => Utils.showError("Gagal menyalin ke clipboard."));
     },
     async init() {
-      this.apiKey = Utils.getGeminiApiKey();
       this.token = Utils.getToken();
       this.quizId = Utils.getQuizId();
+      // Provider OMP tidak butuh API key Gemini; hanya minta key saat provider gemini.
+      this.apiKey = ApiService.useOmpProvider() ? null : Utils.getGeminiApiKey();
       this.popup = UIRenderer.createPopup();
       UIRenderer.showLoading(this.popup.content);
 

@@ -941,24 +941,30 @@ Untuk PILIHAN GANDA, isi answer_index sesuai urutan pilihan dan jangan isi answe
 Untuk ESSAY, isi answer_text dengan jawaban teks lengkap dan jangan isi answer_index.
 
 ${questionText}`;
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.1,
-              maxOutputTokens: 4096,
-              responseMimeType: "application/json",
-            },
-          }),
-        },
-      );
-      if (!response.ok) throw new Error(`Gemini API ${response.status}`);
-      const result = await response.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      let text = "";
+      if (typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini") {
+        const sys = "Kamu adalah AI akademik. Balas HANYA JSON array valid tanpa markdown.";
+        text = await window.mentariAI.askOmp(prompt, { system: sys, temperature: 0.1, maxTokens: 8000 });
+      } else {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 4096,
+                responseMimeType: "application/json",
+              },
+            }),
+          },
+        );
+        if (!response.ok) throw new Error(`Gemini API ${response.status}`);
+        const result = await response.json();
+        text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      }
       const cleaned = text
         .replace(/^```(?:json)?\s*/i, "")
         .replace(/\s*```$/i, "")
@@ -2225,6 +2231,25 @@ ${questionText}`;
         </div>
 
         <div class="settings-section">
+          <div class="settings-section-header"><span class="settings-section-title"><span class="ms">hub</span> AI Provider (OMP / Gemini)</span></div>
+          <div style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+            <label class="settings-section-label" for="ai-provider">Provider</label>
+            <select id="ai-provider" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; outline:none;">
+              <option value="omp">OMP (muse-spark via gateway)</option>
+              <option value="gemini">Gemini (API key)</option>
+            </select>
+            <input id="omp-endpoint" placeholder="http://127.0.0.1:4000/v1" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; font-family:monospace; outline:none;" />
+            <input id="omp-token" type="password" placeholder="Gateway token (~/.omp/auth-gateway.token, kosong bila --no-auth)" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; font-family:monospace; outline:none;" />
+            <input id="omp-model" placeholder="opencode-zen/muse-spark-1.3-contributor-free" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; font-family:monospace; outline:none;" />
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button id="check-omp-btn" class="token-button" style="height:32px; padding:0 12px; font-size:11px; border-radius:6px; flex-shrink:0;">Cek Gateway</button>
+              <span id="omp-status" style="font-size:11px; opacity:0.7;">-</span>
+            </div>
+            <p class="settings-desc" style="margin:0;">Jalankan <code>omp auth-gateway serve</code> agar provider OMP aktif.</p>
+          </div>
+        </div>
+
+        <div class="settings-section">
           <div class="settings-section-header">
             <span class="settings-section-title"><span class="ms">auto_awesome</span> Model Gemini</span>
             <span id="set-model-status" style="font-size:9px; opacity:0.55;">Memuat model...</span>
@@ -2269,6 +2294,41 @@ ${questionText}`;
         e.stopPropagation();
         Utils.toast("Adminnya dah lulus, ga bakal update lagi!");
       };
+
+      // OMP provider controls
+      if (window.mentariAI) {
+        const providerSel = document.getElementById("ai-provider");
+        const endpointInput = document.getElementById("omp-endpoint");
+        const tokenInput = document.getElementById("omp-token");
+        const modelInput = document.getElementById("omp-model");
+        const statusEl = document.getElementById("omp-status");
+        const checkBtn = document.getElementById("check-omp-btn");
+        if (providerSel) {
+          providerSel.value = window.mentariAI.getProvider();
+          providerSel.onchange = function () { window.mentariAI.setProvider(this.value); };
+        }
+        if (endpointInput) {
+          endpointInput.value = window.mentariAI.getOmpEndpoint();
+          endpointInput.onchange = function () { window.mentariAI.setOmpEndpoint(this.value); };
+        }
+        if (tokenInput) {
+          tokenInput.value = window.mentariAI.getOmpToken();
+          tokenInput.onchange = function () { window.mentariAI.setOmpToken(this.value.trim()); };
+        }
+        if (modelInput) {
+          modelInput.value = window.mentariAI.getOmpModel();
+          modelInput.onchange = function () { window.mentariAI.setOmpModel(this.value); };
+        }
+        if (checkBtn) {
+          checkBtn.onclick = async function () {
+            if (statusEl) statusEl.textContent = "mengecek...";
+            const res = await window.mentariAI.checkOmpGateway(endpointInput && endpointInput.value);
+            if (statusEl) {
+              statusEl.textContent = res.ok ? "terhubung (" + res.models.length + " model)" : "gagal: " + res.message;
+            }
+          };
+        }
+      }
 
       // Load model list from Gemini API
       this._loadModelList(currentModel);

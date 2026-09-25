@@ -74,7 +74,17 @@
   };
 
   const ApiService = {
+    useOmp() {
+      try {
+        return typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini";
+      } catch (_) {
+        return false;
+      }
+    },
     async callGemini(prompt) {
+      if (this.useOmp()) {
+        return window.mentariAI.askOmp(prompt, { temperature: 0.7, maxTokens: 2500 }).catch(() => "Tidak ada jawaban dari AI.");
+      }
       const key = Utils.getApiKey();
       let modelRaw = localStorage.getItem("gemini_model") || Config.GEMINI.MODEL;
       let model = modelRaw.replace(/"/g, '');

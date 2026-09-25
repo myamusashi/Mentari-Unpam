@@ -203,7 +203,7 @@ const intervalId = setInterval(() => {
   // Ganti background
   const bgImage = document.querySelector('img[src*="Background-Dt75uuh7.jpg"]');
   if (bgImage) {
-    bgImage.src = chrome.runtime.getURL("src/assets/background.png");
+    bgImage.src = (globalThis.browser ?? globalThis.chrome)?.runtime?.getURL("src/assets/background.png") ?? bgImage.src;
     bgImage.style.width = "100%";
     bgImage.style.height = "100%";
     bgImage.style.objectFit = "cover";

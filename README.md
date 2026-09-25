@@ -68,7 +68,7 @@ Dengan perubahan tersebut, popup Mentari Mod menjadi pusat utama untuk **memanta
 
 ## Instalasi
 
-### Windows / macOS
+### Windows / macOS (Chromium)
 
 Kompatibel dengan browser berbasis Chromium seperti **Google Chrome, Microsoft Edge, dan Brave**.
 
@@ -80,6 +80,27 @@ Kompatibel dengan browser berbasis Chromium seperti **Google Chrome, Microsoft E
 6. Klik **Load unpacked**.
 7. Pilih folder hasil ekstraksi.
 8. Extension siap digunakan.
+
+### Windows / macOS / Linux (Firefox, Zen Browser, LibreWolf)
+
+Kompatibel dengan browser berbasis Gecko lewat `browser_specific_settings.gecko` di `manifest.json`.
+
+1. Unduh dan ekstrak file ZIP ke folder di komputer.
+2. Buka `about:debugging#/runtime/this-firefox`.
+3. Klik **Load Temporary Add-on...**.
+4. Pilih file `manifest.json` dari folder hasil ekstraksi.
+5. Extension siap digunakan! (add-on sementara hilang saat browser ditutup — ulangi langkah ini, atau instal XPI yang sudah ditandatangani agar permanen)
+
+## AI Provider: OMP (muse-spark) atau Gemini
+
+Ekstensi mendukung dua backend AI (pengaturan di popup token → tab Pengaturan → AI Provider):
+
+| Provider | Cara kerja | Syarat |
+|---|---|---|
+| **OMP** (default) | Browser → `POST http://127.0.0.1:4000/v1/chat/completions` (`model: opencode-zen/muse-spark-1.3-contributor-free`) → lokal `omp auth-gateway serve` | Jalankan `omp auth-gateway serve` (butuh `OMP_AUTH_BROKER_URL` + login broker untuk model muse-spark). Cek status via tombol **Cek Gateway** di pengaturan. |
+| **Gemini** (legacy) | Langsung ke `generativelanguage.googleapis.com` | API key Google AI Studio via **Update API Key**. |
+
+Tanpa gateway yang berjalan, provider OMP menampilkan instruksi `omp auth-gateway serve` dan tidak meminta API key. Pilih **Gemini** untuk tetap memakai API key seperti sebelumnya. Gateway membutuhkan host permission `http://127.0.0.1/*` dan `http://localhost/*` yang sudah dideklarasikan di `manifest.json`.
 
 ### Mises Browser
 

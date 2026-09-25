@@ -1,6 +1,15 @@
 // apiKeyManager.js
+function mentariUseOmp() {
+  try {
+    return typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini";
+  } catch (_) {
+    return false;
+  }
+}
 function initializeApiKeyManager() {
   console.log("API Key Manager initializing...");
+  // Provider OMP tidak butuh API key — lewati popup Gemini.
+  if (mentariUseOmp()) return null;
   const storedApiKey = localStorage.getItem("geminiApiKey");
   if (!storedApiKey) {
     console.log("No API key found, showing popup...");
