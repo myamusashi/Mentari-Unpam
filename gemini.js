@@ -734,6 +734,24 @@ function loadChatHistory() {
 }
 
 async function getAnswerFromGemini(apiKey, question, conversationHistory = []) {
+  // Prefer OMP gateway when selected; fall back to direct Gemini.
+  if (typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini") {
+    let conversationContext = "";
+    if (conversationHistory.length > 0) {
+      conversationContext = "Riwayat percakapan sebelumnya:\n";
+      conversationHistory.forEach((msg, index) => {
+        const role = msg.sender === "user" ? "User" : "Assistant";
+        conversationContext += `${role}: ${msg.text}\n`;
+      });
+      conversationContext += "\nPertanyaan terbaru: ";
+    }
+    const prompt = `
+    ${conversationContext}${question}
+
+    jawab pertanyaan diatas, jangan menggunakan huruf tebal ataupun miring dan jangan gunakan karakter khusus seperti (*) pada jawabannya
+  `;
+    return window.mentariAI.askOmp(prompt, { temperature: 0.9, maxTokens: 8000 });
+  }
   // Build conversation context from history
   let conversationContext = "";
   if (conversationHistory.length > 0) {

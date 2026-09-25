@@ -20,6 +20,17 @@
   <img src="https://github.com/user-attachments/assets/5dddf84e-2da9-4a6d-900d-2ed5f3a99b5d" width="100%" alt="Mentari Mod Preview">
 </div>
 
+## AI Provider: OMP (muse-spark) atau Gemini
+
+Ekstensi mendukung dua backend AI (pengaturan di popup Start Tracking → AI Provider):
+
+| Provider | Cara kerja | Syarat |
+|---|---|---|
+| **OMP** (default) | Browser → `POST http://127.0.0.1:4000/v1/chat/completions` (`model: opencode-zen/muse-spark-1.3-contributor-free`) → lokal `omp auth-gateway serve` | Jalankan `omp auth-gateway serve` (butuh `OMP_AUTH_BROKER_URL` + login broker untuk model muse-spark). Cek status via tombol **Cek Gateway** di pengaturan. |
+| **Gemini** (legacy) | Langsung ke `generativelanguage.googleapis.com` | API key Google AI Studio via **Update API Key**. |
+
+Tanpa gateway yang berjalan, provider OMP menampilkan instruksi `omp auth-gateway serve` dan tidak meminta API key. Pilih **Gemini** untuk tetap memakai API key seperti sebelumnya.
+
 ## Fitur Utama
 ### Mentari Mod
 - **Pelacakan Forum Diskusi** — Melacak Forum Diskusi yang diupload oleh dosen dan harus dikerjakan oleh mahasiswa.
@@ -57,14 +68,11 @@
 
 ### Windows/macOS/Linux (Firefox, Zen-browser, Librewolf)
 ```
-1️. Unduh file ekstensi mentari-mod.zip
-2️. Ekstrak file zip ke folder di komputer Anda
-3️. Buka browser Gecko (Firefox, Zen-browser, Librewolf)
-4️. Masuk ke "about:config" dan cari "xpinstall.signatures.required" ubah ke dari "true" ke "false"
-5️. Masuk ke "about:debugging" cari opsi This Zen atau This Firefox
-6️. Klik "Load Temporary Add-on..."
-7️. Cari folder yang sudah di ekstrak dan cari file "manifest.json" dan klik file tersebut
-8️. Ekstensi siap digunakan!
+1️. Unduh file ekstensi mentari-firefox.zip (build Firefox) atau mentari-mod.zip
+2️. Buka about:debugging#/runtime/this-firefox
+3️. Klik "Load Temporary Add-on..."
+4️. Pilih file manifest.json dari folder hasil ekstraksi (atau file .zip/.xpi hasil build)
+5️. Ekstensi siap digunakan! (add-on sementara hilang saat browser ditutup — ulangi langkah ini, atau instal XPI yang sudah ditandatangani agar permanen)
 ```
 
 ### Mises Browser (iOS/Android)

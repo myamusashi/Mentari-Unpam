@@ -43,13 +43,16 @@ if (window.location.href === "https://mentari.unpam.ac.id/login") {
       if (window.toggleTokenPopup) {
         window.toggleTokenPopup();
       } else {
-        // First load apiKeyManager.js
-        let apiKeyManagerScript = document.createElement("script");
-        apiKeyManagerScript.src = chrome.runtime.getURL("apiKeyManager.js");
+        // First load ompProvider.js, then apiKeyManager.js
+        const extApi = globalThis.browser ?? globalThis.chrome;
+        const ompProviderScript = document.createElement("script");
+        ompProviderScript.src = extApi.runtime.getURL("ompProvider.js");
+        const apiKeyManagerScript = document.createElement("script");
+        apiKeyManagerScript.src = extApi.runtime.getURL("apiKeyManager.js");
         apiKeyManagerScript.onload = function () {
           // Then load token.js after apiKeyManager.js is loaded
           let tokenScript = document.createElement("script");
-          tokenScript.src = chrome.runtime.getURL("token.js");
+          tokenScript.src = extApi.runtime.getURL("token.js");
           tokenScript.onload = function () {
             // Call the toggle function after script loads
             if (window.toggleTokenPopup) {
@@ -58,7 +61,10 @@ if (window.location.href === "https://mentari.unpam.ac.id/login") {
           };
           document.body.appendChild(tokenScript);
         };
-        document.body.appendChild(apiKeyManagerScript);
+        ompProviderScript.onload = function () {
+          document.body.appendChild(apiKeyManagerScript);
+        };
+        document.body.appendChild(ompProviderScript);
       }
     }
 

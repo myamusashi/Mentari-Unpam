@@ -7,6 +7,8 @@ function initializeApiKeyManager() {
   if (!storedApiKey) {
     console.log("No API key found, showing popup...");
     // Tunggu sebentar untuk memastikan DOM sudah siap
+    const useOmpInit = typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini";
+    if (useOmpInit) return null;
     setTimeout(() => {
       showApiKeyPopup();
     }, 1000);
@@ -558,14 +560,16 @@ function getGeminiApiKey() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Provider OMP tidak butuh API key — langsung inisialisasi chatbot.
+  const useOmp = typeof window !== "undefined" && window.mentariAI && window.mentariAI.getProvider() !== "gemini";
   // Cek apakah sudah ada API key
   const storedApiKey = localStorage.getItem("geminiApiKey");
-  if (!storedApiKey) {
+  if (!storedApiKey && !useOmp) {
     // Jika belum ada API key, tampilkan popup
     showApiKeyPopup();
   } else {
-    // Jika sudah ada API key, inisialisasi chatbot dengan API key yang ada
-    const apiKey = atob(storedApiKey);
-    createChatbotInterface(apiKey);
+    // Jika sudah ada API key (atau provider OMP), inisialisasi chatbot
+    const apiKey = storedApiKey ? atob(storedApiKey) : null;
+    if (typeof createChatbotInterface === "function") createChatbotInterface(apiKey);
   }
 });
