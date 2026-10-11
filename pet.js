@@ -969,9 +969,14 @@
   var resetBtn = document.getElementById("resetPets");
   if (resetBtn) {
     resetBtn.addEventListener("click", function () {
+      var keepTheme = currentTheme;
       config = PetStore.reset();
+      // Reset restores default pets but keeps the shared color theme (hot-reload stays live).
+      config.world.theme = keepTheme;
+      PetStore.save(config);
       isNight = !!config.world.night;
       applyNight();
+      writeSharedTheme(keepTheme);
       applyTheme();
       rebuild();
     });
@@ -994,9 +999,13 @@
     var msg = e.data;
     if (!msg || msg.type !== "mentari-pet") return;
     if (msg.action === "reset") {
+      var keepThemeMsg = currentTheme;
       config = PetStore.reset();
+      config.world.theme = keepThemeMsg;
+      PetStore.save(config);
       isNight = !!config.world.night;
       applyNight();
+      writeSharedTheme(keepThemeMsg);
       applyTheme();
       rebuild();
     } else if (msg.action === "theme" && msg.theme) {
@@ -1008,7 +1017,8 @@
       }
       config = msg.config;
       PetStore.save(config);
-      applyTheme();
+      // Route through setTheme so the pushed theme broadcasts to popup + LMS (hot-reload).
+      setTheme(config.world.theme);
       rebuild();
     } else if (msg.action === "add" && msg.pet) {
       msg.pet.id = msg.pet.id || uid();
@@ -1023,7 +1033,8 @@
     saveConfig: function (cfg) {
       config = cfg;
       PetStore.save(config);
-      applyTheme();
+      if (config.world && config.world.theme && THEMES[config.world.theme]) setTheme(config.world.theme);
+      else applyTheme();
       rebuild();
     },
     addPet: addPet,
@@ -1038,7 +1049,11 @@
     },
     themes: Object.keys(THEMES),
     reset: function () {
+      var keepTheme = currentTheme;
       config = PetStore.reset();
+      config.world.theme = keepTheme;
+      PetStore.save(config);
+      writeSharedTheme(keepTheme);
       applyTheme();
       rebuild();
     }

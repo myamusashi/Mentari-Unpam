@@ -29,6 +29,8 @@
     isFetching: false,
     currentTab: "forum-tab",
   };
+  let themeSplitApi = null;
+  let themeSplitUnsub = null;
 
   const Utils = {
     save(key, data) {
@@ -1674,7 +1676,8 @@ ${questionText}`;
       const themeHost = document.getElementById("mm-theme-split");
       if (themeHost && window.MentariM3 && window.MentariM3.createSplitButton) {
         themeHost.innerHTML = "";
-        const themeSplit = window.MentariM3.createSplitButton({
+        if (themeSplitUnsub) { themeSplitUnsub(); themeSplitUnsub = null; }
+        themeSplitApi = window.MentariM3.createSplitButton({
           id: "mm-theme-split-btn",
           color: "tonal",
           size: "sm",
@@ -1686,7 +1689,11 @@ ${questionText}`;
             Utils.toast("Tema warna: " + (opt ? opt.label : v));
           },
         });
-        themeHost.appendChild(themeSplit.root);
+        themeHost.appendChild(themeSplitApi.root);
+        // Hot-reload: theme picked on another surface (popup, pet stage) repaints here live.
+        themeSplitUnsub = window.MentariM3.onThemeChange(function (name) {
+          if (themeSplitApi) { try { themeSplitApi.setValue(name); } catch (_) {} }
+        });
       }
       document.getElementById("set-api-btn").onclick = (e) => {
         e.stopPropagation();
