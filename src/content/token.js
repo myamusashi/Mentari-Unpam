@@ -422,10 +422,10 @@ ${questionText}`;
               </div>
               <button id="token-refresh-btn" class="mm-btn mm-btn-sm mm-btn-tonal" title="Refresh status"><span class="ms">refresh</span></button>
             </div>
-            <div class="token-tabs mm-tabs" style="width:100%;">
-              <button class="token-tab mm-tab mm-tab-on active" data-tab="forum-tab" title="Forum"><span class="ms">forum</span><span id="forum-tab-badge" class="token-tab-badge mm-badge" style="display:none;"></span></button>
-              <button class="token-tab mm-tab" data-tab="mhs-tab" title="Mahasiswa"><span class="ms">groups</span></button>
-              <button class="token-tab mm-tab" data-tab="set-tab" title="Pengaturan"><span class="ms">settings</span></button>
+            <div class="token-tabs mm-tabs mm-cbg" role="tablist" style="width:100%;">
+              <button class="token-tab mm-tab mm-cbg-btn mm-tab-on mm-cbg-on active" data-tab="forum-tab" role="tab" aria-selected="true" tabindex="0" title="Forum"><span class="ms">forum</span><span id="forum-tab-badge" class="token-tab-badge mm-badge" style="display:none;"></span></button>
+              <button class="token-tab mm-tab mm-cbg-btn" data-tab="mhs-tab" role="tab" aria-selected="false" tabindex="-1" title="Mahasiswa"><span class="ms">groups</span></button>
+              <button class="token-tab mm-tab mm-cbg-btn" data-tab="set-tab" role="tab" aria-selected="false" tabindex="-1" title="Pengaturan"><span class="ms">settings</span></button>
             </div>
           </div>
           <div class="token-tab-content mm-scroll active" id="forum-tab-tab" style="display:block; padding:16px; flex:1; overflow-y:auto; overflow-x:hidden; box-sizing:border-box;"></div>
@@ -442,25 +442,48 @@ ${questionText}`;
       };
     },
     initTabs() {
-      const tabs = document.querySelectorAll(".token-tab");
-      tabs.forEach((t) => {
+      const tabs = Array.from(document.querySelectorAll(".token-tab"));
+      const activate = (t) => {
+        document
+          .querySelectorAll(".token-tab, .token-tab-content")
+          .forEach((el) => {
+            el.classList.remove("active");
+            el.classList.remove("mm-tab-on");
+            el.classList.remove("mm-cbg-on");
+            if (el.classList.contains("token-tab")) {
+              el.setAttribute("aria-selected", "false");
+              el.setAttribute("tabindex", "-1");
+            }
+            if (el.classList.contains("token-tab-content"))
+              el.style.display = "none";
+          });
+        t.classList.add("active");
+        t.classList.add("mm-tab-on");
+        t.classList.add("mm-cbg-on");
+        t.setAttribute("aria-selected", "true");
+        t.setAttribute("tabindex", "0");
+        const panel = document.getElementById(t.dataset.tab + "-tab");
+        if (panel) {
+          panel.classList.add("active");
+          panel.style.display = "block";
+        }
+      };
+      tabs.forEach((t, i) => {
         t.onclick = (e) => {
           e.stopPropagation();
-          document
-            .querySelectorAll(".token-tab, .token-tab-content")
-            .forEach((el) => {
-              el.classList.remove("active");
-              el.classList.remove("mm-tab-on");
-              if (el.classList.contains("token-tab-content"))
-                el.style.display = "none";
-            });
-          t.classList.add("active");
-          t.classList.add("mm-tab-on");
-          const panel = document.getElementById(t.dataset.tab + "-tab");
-          if (panel) {
-            panel.classList.add("active");
-            panel.style.display = "block";
-          }
+          activate(t);
+        };
+        t.onkeydown = (e) => {
+          let idx = -1;
+          if (e.key === "ArrowRight") idx = (i + 1) % tabs.length;
+          else if (e.key === "ArrowLeft") idx = (i - 1 + tabs.length) % tabs.length;
+          else if (e.key === "Home") idx = 0;
+          else if (e.key === "End") idx = tabs.length - 1;
+          else return;
+          e.preventDefault();
+          e.stopPropagation();
+          tabs[idx].focus();
+          activate(tabs[idx]);
         };
       });
     },
@@ -1309,15 +1332,25 @@ ${questionText}`;
 
       selectBtn.onclick = (e) => {
         e.stopPropagation();
-        optionsList.style.display =
-          optionsList.style.display === "none" ? "block" : "none";
+        const willOpen = optionsList.style.display === "none";
+        optionsList.style.display = willOpen ? "block" : "none";
+        selectBtn.classList.toggle("mm-open", willOpen);
       };
 
       const selectOption = (id, text) => {
         hiddenInput.value = id;
         selectLabel.textContent = text;
         optionsList.style.display = "none";
+        selectBtn.classList.remove("mm-open");
       };
+      form.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && optionsList.style.display !== "none") {
+          e.stopPropagation();
+          optionsList.style.display = "none";
+          selectBtn.classList.remove("mm-open");
+          selectBtn.focus();
+        }
+      });
 
       let isFirst = true;
 
@@ -1577,11 +1610,8 @@ ${questionText}`;
         <div class="settings-section mm-card mm-card-outline" style="margin-bottom:12px;">
           <div class="settings-section-header mm-card-head"><span class="settings-section-title mm-title" style="font-size:13px; display:flex; align-items:center; gap:7px;"><span class="ms">hub</span> AI Provider (OMP / Gemini)</span></div>
           <div class="mm-card-body mm-field">
-            <label class="settings-section-label mm-label" for="ai-provider">Provider</label>
-            <select id="ai-provider" class="mm-select">
-              <option value="omp">OMP (muse-spark via gateway)</option>
-              <option value="gemini">Gemini (API key)</option>
-            </select>
+            <label class="settings-section-label mm-label" for="ai-provider-split">Provider</label>
+            <div id="ai-provider-split"></div>
             <input id="omp-endpoint" class="mm-input" placeholder="http://127.0.0.1:4000/v1" style="font-family:monospace;" />
             <input id="omp-token" class="mm-input" type="password" placeholder="Gateway token (~/.omp/auth-gateway.token, kosong bila --no-auth)" style="font-family:monospace;" />
             <input id="omp-model" class="mm-input" placeholder="opencode-zen/muse-spark-1.3-contributor-free" style="font-family:monospace;" />
@@ -1598,15 +1628,8 @@ ${questionText}`;
             <span class="settings-section-title mm-title" style="font-size:13px; display:flex; align-items:center; gap:7px;"><span class="ms">palette</span> Tema Warna</span>
           </div>
           <div class="mm-card-body mm-field">
-            <label class="settings-section-label mm-label" for="mm-theme-select">Preset warna popup + pet stage</label>
-            <select id="mm-theme-select" class="mm-select">
-              <option value="sunset">Sunset (Bawaan)</option>
-              <option value="rimba">Rimba · Teal</option>
-              <option value="anggrek">Anggrek · Ungu</option>
-              <option value="senja">Senja · Olive</option>
-              <option value="samudra">Samudra · Biru</option>
-              <option value="bata">Bata · Terakota</option>
-            </select>
+            <label class="settings-section-label mm-label" for="mm-theme-split">Preset warna popup + pet stage</label>
+            <div id="mm-theme-split"></div>
             <p class="settings-desc mm-hint" style="margin:0;">Mewarnai ulang popup ini, quiz helper, presensi, survei, dan dialog API key.</p>
           </div>
         </div>
@@ -1647,14 +1670,23 @@ ${questionText}`;
         );
       };
 
-      // M3 color theme preset
-      const themeSel = document.getElementById("mm-theme-select");
-      if (themeSel && window.MentariM3) {
-        themeSel.value = window.MentariM3.getTheme();
-        themeSel.onchange = function () {
-          window.MentariM3.setTheme(this.value);
-          Utils.toast("Tema warna: " + this.options[this.selectedIndex].text);
-        };
+      // M3 color theme preset (split button: leading = current, trailing = menu)
+      const themeHost = document.getElementById("mm-theme-split");
+      if (themeHost && window.MentariM3 && window.MentariM3.createSplitButton) {
+        themeHost.innerHTML = "";
+        const themeSplit = window.MentariM3.createSplitButton({
+          id: "mm-theme-split-btn",
+          color: "tonal",
+          size: "sm",
+          leadIcon: "palette",
+          options: window.MentariM3.themeOptions(),
+          value: window.MentariM3.getTheme(),
+          onPick: function (v, opt) {
+            window.MentariM3.setTheme(v);
+            Utils.toast("Tema warna: " + (opt ? opt.label : v));
+          },
+        });
+        themeHost.appendChild(themeSplit.root);
       }
       document.getElementById("set-api-btn").onclick = (e) => {
         e.stopPropagation();
@@ -1667,15 +1699,27 @@ ${questionText}`;
 
       // OMP provider controls
       if (window.mentariAI) {
-        const providerSel = document.getElementById("ai-provider");
         const endpointInput = document.getElementById("omp-endpoint");
         const tokenInput = document.getElementById("omp-token");
         const modelInput = document.getElementById("omp-model");
         const statusEl = document.getElementById("omp-status");
         const checkBtn = document.getElementById("check-omp-btn");
-        if (providerSel) {
-          providerSel.value = window.mentariAI.getProvider();
-          providerSel.onchange = function () { window.mentariAI.setProvider(this.value); };
+        const providerHost = document.getElementById("ai-provider-split");
+        if (providerHost && window.MentariM3 && window.MentariM3.createSplitButton) {
+          providerHost.innerHTML = "";
+          const providerSplit = window.MentariM3.createSplitButton({
+            id: "ai-provider-split-btn",
+            color: "tonal",
+            size: "sm",
+            leadIcon: "hub",
+            value: window.mentariAI.getProvider(),
+            options: [
+              { value: "omp", label: "OMP (muse-spark via gateway)", icon: "hub" },
+              { value: "gemini", label: "Gemini (API key)", icon: "auto_awesome" },
+            ],
+            onPick: function (v) { window.mentariAI.setProvider(v); },
+          });
+          providerHost.appendChild(providerSplit.root);
         }
         if (endpointInput) {
           endpointInput.value = window.mentariAI.getOmpEndpoint();

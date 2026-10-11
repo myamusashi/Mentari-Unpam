@@ -9,12 +9,7 @@
       .pop { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
       .pop-row { display: flex; align-items: center; gap: 8px; }
       .pop-title { flex: 1; font-size: 15px; font-weight: 500; color: var(--mm-on-surface); }
-      select {
-        width: 100%; font: inherit; font-size: 13px; color: var(--mm-on-surface);
-        background: var(--mm-surface-high); border: 1px solid var(--mm-outline);
-        border-radius: 8px; padding: 8px 10px; outline: none;
-      }
-      select:focus { border-color: var(--mm-primary); }
+      #themeSplit .mm-split { width: 100%; }
     </style>
   </head>
   <body>
@@ -23,12 +18,12 @@
         <span class="ms" style="color: var(--mm-primary);">pets</span>
         <span class="pop-title">Mentari Mod</span>
       </div>
-      <button id="runToken" class="mm-btn" style="width: 100%;">
+      <button id="runToken" class="mm-btn" style="width: 100%;" aria-label="Jalankan">
         <span class="ms">bolt</span> Jalankan
       </button>
       <div style="display: flex; flex-direction: column; gap: 6px;">
-        <label class="mm-label" for="themeSelect">Tema warna</label>
-        <select id="themeSelect" class="mm-select"></select>
+        <label class="mm-label" for="themeSplit">Tema warna</label>
+        <div id="themeSplit"></div>
         <span class="mm-hint">Tersinkron dengan pet stage dan halaman Mentari.</span>
       </div>
     </div>

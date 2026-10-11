@@ -2,25 +2,23 @@ const extApi = globalThis.browser ?? globalThis.chrome;
 
 const m3 = globalThis.MentariM3;
 
-const themeSel = document.getElementById("themeSelect");
-if (themeSel && m3) {
+const themeHost = document.getElementById("themeSplit");
+if (themeHost && m3 && m3.createSplitButton) {
   m3.ensure();
   // Options come from the shared table so the popup can never drift from the
   // pet stage or the in-page settings dialog.
-  const labels = m3.themeLabels || {};
-  m3.themes.forEach((name) => {
-    const opt = document.createElement("option");
-    opt.value = name;
-    opt.textContent = labels[name] || name;
-    themeSel.appendChild(opt);
+  const split = m3.createSplitButton({
+    id: "themeSplit-btn",
+    color: "tonal",
+    size: "sm",
+    leadIcon: "palette",
+    options: m3.themeOptions(),
+    value: m3.getTheme(),
+    onPick: (v) => m3.setTheme(v),
   });
-  const sync = (name) => {
-    themeSel.value = name;
-  };
-  sync(m3.getTheme());
-  themeSel.addEventListener("change", () => m3.setTheme(themeSel.value));
+  themeHost.appendChild(split.root);
   // Another surface (pet stage dialog, in-page settings) changed the theme.
-  m3.onThemeChange(sync);
+  m3.onThemeChange((name) => split.setValue(name));
 }
 
 document.getElementById("runToken").addEventListener("click", async () => {

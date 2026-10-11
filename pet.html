@@ -23,6 +23,7 @@
       * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
       html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
       body { font-family: var(--mm-font); }
+      .ms { font-family: 'Material Symbols Rounded'; font-size: 20px; font-style: normal; font-weight: 400; line-height: 1; display: inline-flex; align-items: center; vertical-align: middle; user-select: none; letter-spacing: normal; text-transform: none; white-space: nowrap; }
       #world {
         position: relative; width: 100vw; height: 100vh; overflow: hidden;
         background: linear-gradient(to bottom, #1b2340 0%, #2b3a67 45%, #3f5a3a 45%, #243d22 100%);
@@ -157,7 +158,24 @@
         background: var(--mm-surface-highest); border: 1px solid var(--mm-outline-variant);
         border-radius: 8px; padding: 8px 10px; outline: none; width: 100%;
       }
-      .field input:focus, .field select:focus { border-color: var(--mm-primary); box-shadow: 0 0 0 1px var(--mm-primary); }
+      .field .mm-split { width: 100%; }
+      .mm-split { position: relative; display: inline-flex; width: 100%; min-height: 40px; border-radius: 9999px; overflow: visible; background: var(--mm-secondary-container); color: var(--mm-on-secondary-container); }
+      .mm-split-lead { flex: 1; display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 0 8px 0 16px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 9999px 0 0 9999px; }
+      .mm-split-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+      .mm-split-lead .ms { font-size: 18px; flex-shrink: 0; }
+      .mm-split-trail { display: inline-flex; align-items: center; justify-content: center; width: 48px; flex-shrink: 0; border: 0; border-left: 1px solid var(--mm-outline-variant); background: transparent; color: inherit; cursor: pointer; border-radius: 0 9999px 9999px 0; }
+      .mm-split-trail .ms { font-size: 20px; transition: transform .3s cubic-bezier(.2,0,0,1); }
+      .mm-split.mm-open { border-radius: 16px; }
+      .mm-split.mm-open .mm-split-lead { border-radius: 16px 0 0 16px; }
+      .mm-split.mm-open .mm-split-trail { border-radius: 0 16px 16px 0; }
+      .mm-split.mm-open .mm-split-trail .ms { transform: rotate(180deg); }
+      .mm-split-xs { min-height: 32px; font-size: 12px; }
+      .mm-split-xs .mm-split-lead { font-size: 12px; }
+      .mm-menu { position: absolute; top: calc(100% + 4px); right: 0; min-width: 100%; max-height: 220px; overflow: auto; z-index: 200; background: var(--mm-surface-high); color: var(--mm-on-surface); border: 1px solid var(--mm-outline-variant); border-radius: 12px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+      .mm-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; font-size: 13px; cursor: pointer; text-align: left; }
+      .mm-menu-item:hover { background: var(--mm-surface-highest); }
+      .mm-menu-item.mm-menu-on { background: var(--mm-secondary-container); color: var(--mm-on-secondary-container); }
+      .mm-menu-item .ms { font-size: 18px; flex-shrink: 0; }
       .state-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
       .row { display: flex; gap: 8px; }
       .row .field { flex: 1; }
@@ -213,15 +231,8 @@
         <h2>Hewan Peliharaan</h2>
         <div class="sub">Pakai GIF per gerakan, atau satu gambar statis untuk semua gerakan. Perubahan tersimpan otomatis di browser ini.</div>
         <div class="field" style="margin-bottom:12px">
-          <label for="themeSelect">Tema warna</label>
-          <select id="themeSelect">
-            <option value="sunset">Sunset (Bawaan)</option>
-            <option value="rimba">Rimba · Teal</option>
-            <option value="anggrek">Anggrek · Ungu</option>
-            <option value="senja">Senja · Olive</option>
-            <option value="samudra">Samudra · Biru</option>
-            <option value="bata">Bata · Terakota</option>
-          </select>
+          <label for="themeSplit">Tema warna</label>
+          <div id="themeSplit"></div>
         </div>
         <div id="petList"></div>
         <div class="row">

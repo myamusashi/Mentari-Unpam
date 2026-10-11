@@ -110,6 +110,16 @@
       outlineVariant: "#554440"
     }
   };
+  var THEME_LABELS = {
+    sunset: "Sunset (Bawaan)",
+    rimba: "Rimba · Teal",
+    anggrek: "Anggrek · Ungu",
+    senja: "Senja · Olive",
+    samudra: "Samudra · Biru",
+    bata: "Bata · Terakota"
+  };
+  var THEME_ORDER = ["sunset", "rimba", "anggrek", "senja", "samudra", "bata"];
+
 
   function defaults() {
     return {
@@ -540,8 +550,7 @@
       if (theme) document.documentElement.style.setProperty(THEME_VAR[key], theme[key]);
       else document.documentElement.style.removeProperty(THEME_VAR[key]);
     });
-    var sel = document.getElementById("themeSelect");
-    if (sel) sel.value = theme ? name : "sunset";
+    if (themeSplitApi) themeSplitApi.setValue(theme ? name : "sunset");
   }
   function commitTheme(name) {
     name = normalizeTheme(name);
@@ -585,6 +594,156 @@
     }
     return next;
   }
+  /* Local split-button builder (mirrors MentariM3.createSplitButton).
+   * Used because window.MentariM3 is absent on this origin; if it ever
+   * becomes available, wireThemeSplit prefers it. */
+  var themeSplitApi = null;
+  var petSplitDocBound = false;
+  var petOpenSplits = [];
+  function bindPetSplitDocOnce() {
+    if (petSplitDocBound) return;
+    petSplitDocBound = true;
+    document.addEventListener("pointerdown", function (e) {
+      petOpenSplits.slice().forEach(function (entry) {
+        if (!entry.root.contains(e.target)) entry.close(false);
+      });
+    });
+  }
+  function buildPetSplit(host, opts) {
+    var options = opts.options || [];
+    var value = opts.value != null ? opts.value : (options[0] && options[0].value);
+    var onPick = opts.onPick || function () {};
+    var root = document.createElement("div");
+    root.className = "mm-split" + (opts.size === "xs" ? " mm-split-xs" : "");
+    var lead = document.createElement("button");
+    lead.type = "button";
+    lead.className = "mm-split-lead";
+    var leadIc = document.createElement("span");
+    leadIc.className = "ms";
+    leadIc.textContent = opts.leadIcon || "palette";
+    var leadLabel = document.createElement("span");
+    leadLabel.className = "mm-split-label";
+    lead.appendChild(leadIc);
+    lead.appendChild(leadLabel);
+    var trail = document.createElement("button");
+    trail.type = "button";
+    trail.className = "mm-split-trail";
+    trail.setAttribute("aria-haspopup", "menu");
+    trail.setAttribute("aria-label", "Buka menu pilihan");
+    trail.title = "Buka menu pilihan";
+    trail.setAttribute("aria-expanded", "false");
+    var trailIc = document.createElement("span");
+    trailIc.className = "ms";
+    trailIc.textContent = "expand_more";
+    trail.appendChild(trailIc);
+    var menu = document.createElement("div");
+    menu.className = "mm-menu";
+    menu.setAttribute("role", "menu");
+    menu.hidden = true;
+    function findOpt(v) {
+      for (var i = 0; i < options.length; i++) if (options[i].value === v) return options[i];
+      return null;
+    }
+    var items = [];
+    function setValue(v) {
+      var opt = findOpt(v) || options[0];
+      if (!opt) return v;
+      value = opt.value;
+      leadLabel.textContent = opt.label;
+      if (opt.icon) leadIc.textContent = opt.icon;
+      items.forEach(function (it) {
+        var on = it._opt.value === value;
+        it.classList.toggle("mm-menu-on", on);
+        it.setAttribute("aria-checked", on ? "true" : "false");
+      });
+      return value;
+    }
+    function open() {
+      menu.hidden = false;
+      root.classList.add("mm-open");
+      trail.setAttribute("aria-expanded", "true");
+      bindPetSplitDocOnce();
+      if (petOpenSplits.indexOf(api) < 0) petOpenSplits.push(api);
+    }
+    function close(focusTrail) {
+      menu.hidden = true;
+      root.classList.remove("mm-open");
+      trail.setAttribute("aria-expanded", "false");
+      var i = petOpenSplits.indexOf(api);
+      if (i >= 0) petOpenSplits.splice(i, 1);
+      if (focusTrail) { try { trail.focus(); } catch (_) {} }
+    }
+    options.forEach(function (opt) {
+      var it = document.createElement("button");
+      it.type = "button";
+      it.className = "mm-menu-item";
+      it.setAttribute("role", "menuitemradio");
+      it._opt = opt;
+      if (opt.icon) {
+        var ic = document.createElement("span");
+        ic.className = "ms";
+        ic.textContent = opt.icon;
+        it.appendChild(ic);
+      }
+      var lb = document.createElement("span");
+      lb.textContent = opt.label;
+      it.appendChild(lb);
+      it.addEventListener("click", function (e) {
+        e.stopPropagation();
+        setValue(opt.value);
+        close(false);
+        onPick(opt.value, opt);
+      });
+      menu.appendChild(it);
+      items.push(it);
+    });
+    trail.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (menu.hidden) open(); else close(false);
+    });
+    lead.addEventListener("click", function (e) {
+      e.stopPropagation();
+      onPick(value, findOpt(value) || options[0]);
+    });
+    root.addEventListener("keydown", function (e) {
+      if (menu.hidden || e.key !== "Escape") return;
+      e.stopPropagation();
+      close(true);
+    });
+    root.appendChild(lead);
+    root.appendChild(trail);
+    root.appendChild(menu);
+    host.innerHTML = "";
+    host.appendChild(root);
+    setValue(value);
+    var api = { root: root, close: close, open: open, getValue: function () { return value; }, setValue: setValue };
+    return api;
+  }
+  function themeSplitOptions() {
+    return THEME_ORDER.map(function (name) {
+      return { value: name, label: THEME_LABELS[name] || name, icon: "palette" };
+    });
+  }
+  function wireThemeSplit() {
+    var host = document.getElementById("themeSplit");
+    if (!host) return;
+    if (window.MentariM3 && window.MentariM3.createSplitButton && window.MentariM3.themeOptions) {
+      host.innerHTML = "";
+      var split = window.MentariM3.createSplitButton({
+        color: "tonal", size: "sm", leadIcon: "palette",
+        options: window.MentariM3.themeOptions(),
+        value: config.world.theme, onPick: setTheme
+      });
+      host.appendChild(split.root);
+      themeSplitApi = split;
+      return;
+    }
+    themeSplitApi = buildPetSplit(host, {
+      leadIcon: "palette", options: themeSplitOptions(),
+      value: config.world.theme, onPick: setTheme
+    });
+  }
+
 
   function rebuild() {
     pets.forEach(function (p) { p.destroy(); });
@@ -677,22 +836,25 @@
       kindF.className = "field";
       var kindL = document.createElement("label");
       kindL.textContent = "Jenis";
-      var kindS = document.createElement("select");
-      ["gif", "image"].forEach(function (k) {
-        var o = document.createElement("option");
-        o.value = k;
-        o.textContent = k === "gif" ? "GIF per gerakan" : "1 gambar statis";
-        if (entry.kind === k) o.selected = true;
-        kindS.appendChild(o);
-      });
-      kindS.addEventListener("change", function () {
-        entry.kind = kindS.value;
-        PetStore.save(config);
-        refreshPet(entry);
-        renderConfigList();
+      var kindHost = document.createElement("div");
+      kindHost.id = "kindSplit-" + entry.id;
+      buildPetSplit(kindHost, {
+        size: "xs",
+        leadIcon: entry.kind === "image" ? "image" : "gif",
+        value: entry.kind,
+        options: [
+          { value: "gif", label: "GIF per gerakan", icon: "gif" },
+          { value: "image", label: "1 gambar statis", icon: "image" }
+        ],
+        onPick: function (v) {
+          entry.kind = v;
+          PetStore.save(config);
+          refreshPet(entry);
+          renderConfigList();
+        }
       });
       kindF.appendChild(kindL);
-      kindF.appendChild(kindS);
+      kindF.appendChild(kindHost);
       row.appendChild(nameF);
       row.appendChild(kindF);
       card.appendChild(row);
@@ -799,12 +961,7 @@
   }
   var closeBtn = document.getElementById("closeConfig");
   if (closeBtn) closeBtn.addEventListener("click", closeConfig);
-  var themeSel = document.getElementById("themeSelect");
-  if (themeSel) {
-    themeSel.addEventListener("change", function () {
-      setTheme(themeSel.value);
-    });
-  }
+  wireThemeSplit();
   var addGif = document.getElementById("addGifPet");
   if (addGif) addGif.addEventListener("click", function () { addPet("gif"); });
   var addImg = document.getElementById("addImgPet");
