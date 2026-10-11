@@ -18,9 +18,12 @@
     return "pet-" + Math.random().toString(36).slice(2, 9);
   }
   /* Stage color themes live in src/content/m3.js (window.MentariM3).
-   * pet.html is a standalone page without the content-script world, so the
-   * tables are duplicated here as fallback when MentariM3 is absent.
-   * "sunset" = built-in orange look (clears overrides). */
+   * pet.html runs on the extension origin inside an iframe, where the LMS
+   * content script is absent, so m3.js is never loaded here. The theme is
+   * therefore read from chrome.storage.local — the same canonical store the
+   * popup and content scripts use — and mirrored into the pet's own config.
+   * The tables below stay as the fallback for contexts without extension
+   * storage APIs. "sunset" = built-in orange look (clears overrides). */
   var THEME_VAR = {
     primary: "--mm-primary", onPrimary: "--mm-on-primary",
     primaryContainer: "--mm-primary-container", onPrimaryContainer: "--mm-on-primary-container",
@@ -498,17 +501,40 @@
     applyNight();
   }
 
-  function applyTheme() {
-    // Shared store wins when reachable (course-page iframe shares the LMS
-    // origin, so localStorage matches the popup). Standalone file:// keeps
-    // the pet's own config.world.theme via local THEMES fallback.
-    var name = config.world.theme || "sunset";
-    if (window.MentariM3 && window.MentariM3.getTheme) {
-      try {
-        var shared = window.MentariM3.getTheme();
-        if (shared) name = shared;
-      } catch (_) {}
+  var SHARED_THEME_KEY = "mentariTheme";
+  var themeListeners = [];
+  var currentTheme = "sunset";
+
+  function extStore() {
+    try {
+      var api = globalThis.browser || globalThis.chrome;
+      return api && api.storage ? api.storage.local : null;
+    } catch (_) {
+      return null;
     }
+  }
+  function normalizeTheme(name) {
+    return THEMES[name] ? name : "sunset";
+  }
+  function readSharedTheme(cb) {
+    var store = extStore();
+    if (!store) { cb(null); return; }
+    try {
+      store.get(SHARED_THEME_KEY, function (res) {
+        cb(res ? res[SHARED_THEME_KEY] : null);
+      });
+    } catch (_) {
+      cb(null);
+    }
+  }
+  function writeSharedTheme(name) {
+    var store = extStore();
+    if (!store) return;
+    var patch = {};
+    patch[SHARED_THEME_KEY] = name;
+    try { store.set(patch); } catch (_) {}
+  }
+  function paintTheme(name) {
     var theme = THEMES[name];
     Object.keys(THEME_VAR).forEach(function (key) {
       if (theme) document.documentElement.style.setProperty(THEME_VAR[key], theme[key]);
@@ -517,15 +543,47 @@
     var sel = document.getElementById("themeSelect");
     if (sel) sel.value = theme ? name : "sunset";
   }
+  function commitTheme(name) {
+    name = normalizeTheme(name);
+    if (config.world.theme !== name) {
+      config.world.theme = name;
+      PetStore.save(config);
+    }
+    if (name === currentTheme) return;
+    currentTheme = name;
+    paintTheme(name);
+    themeListeners.slice().forEach(function (fn) {
+      try { fn(name); } catch (_) {}
+    });
+  }
+  /* Read once on load, then follow chrome.storage so a change made in the
+   * popup repaints this stage without a reload. */
+  function initSharedTheme() {
+    currentTheme = normalizeTheme(config.world.theme);
+    readSharedTheme(function (shared) {
+      if (shared && THEMES[shared]) commitTheme(shared);
+      else writeSharedTheme(currentTheme);
+    });
+    var store = extStore();
+    if (store && store.onChanged) {
+      store.onChanged.addListener(function (changes, area) {
+        if (area !== "local" || !changes[SHARED_THEME_KEY]) return;
+        commitTheme(changes[SHARED_THEME_KEY].newValue);
+      });
+    }
+  }
+  function applyTheme() {
+    paintTheme(currentTheme);
+  }
 
   function setTheme(name) {
-    if (!THEMES[name]) name = "sunset";
-    config.world.theme = name;
-    PetStore.save(config);
+    var next = normalizeTheme(name);
+    commitTheme(next);
+    writeSharedTheme(next);
     if (window.MentariM3 && window.MentariM3.setTheme) {
-      try { window.MentariM3.setTheme(name); } catch (_) {}
+      try { window.MentariM3.setTheme(next); } catch (_) {}
     }
-    applyTheme();
+    return next;
   }
 
   function rebuild() {
@@ -813,6 +871,14 @@
     },
     addPet: addPet,
     setTheme: setTheme,
+    getTheme: function () { return currentTheme; },
+    onThemeChange: function (fn) {
+      themeListeners.push(fn);
+      return function () {
+        var i = themeListeners.indexOf(fn);
+        if (i >= 0) themeListeners.splice(i, 1);
+      };
+    },
     themes: Object.keys(THEMES),
     reset: function () {
       config = PetStore.reset();
@@ -822,6 +888,7 @@
   };
 
   createStars();
+  initSharedTheme();
   createGrassBlades();
   applyNight();
   applyTheme();

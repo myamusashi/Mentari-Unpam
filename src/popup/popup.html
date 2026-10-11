@@ -3,31 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Token Runner</title>
+    <title>Mentari Mod</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        width: 200px;
-        padding: 10px;
+      body { width: 232px; margin: 0; background: var(--mm-surface); }
+      .pop { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+      .pop-row { display: flex; align-items: center; gap: 8px; }
+      .pop-title { flex: 1; font-size: 15px; font-weight: 500; color: var(--mm-on-surface); }
+      select {
+        width: 100%; font: inherit; font-size: 13px; color: var(--mm-on-surface);
+        background: var(--mm-surface-high); border: 1px solid var(--mm-outline);
+        border-radius: 8px; padding: 8px 10px; outline: none;
       }
-      button {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 10px;
-        width: 100%;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #0056b3;
-      }
+      select:focus { border-color: var(--mm-primary); }
     </style>
   </head>
   <body>
-    <h3>Jalankan Token</h3>
-    <button id="runToken">Jalankan</button>
+    <div class="pop mm">
+      <div class="pop-row">
+        <span class="ms" style="color: var(--mm-primary);">pets</span>
+        <span class="pop-title">Mentari Mod</span>
+      </div>
+      <button id="runToken" class="mm-btn" style="width: 100%;">
+        <span class="ms">bolt</span> Jalankan
+      </button>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label class="mm-label" for="themeSelect">Tema warna</label>
+        <select id="themeSelect" class="mm-select"></select>
+        <span class="mm-hint">Tersinkron dengan pet stage dan halaman Mentari.</span>
+      </div>
+    </div>
+    <script src="../content/m3.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

@@ -137,10 +137,13 @@
     ".mm-seg button.mm-seg-on{background:var(--mm-secondary-container);color:var(--mm-on-secondary-container);font-weight:700;}"
   ].join("\n");
   /* Shared stage/extension color themes (dark M3 schemes from user presets).
-   * Persisted per-origin in localStorage; applied as inline --mm-* vars on
-   * documentElement so every popup on the page picks them up. "sunset" is
-   * the built-in look and clears all overrides. */
+   * Canonical store is chrome.storage.local, so every Mentari surface agrees
+   * regardless of origin: LMS content scripts, the extension popup, and the
+   * pet stage iframe. localStorage is kept as a per-origin mirror/fallback for
+   * pages where chrome.storage is unavailable. "sunset" is the built-in look
+   * and clears all overrides. */
   var THEME_KEY = "mentari-m3-theme";
+  var SHARED_THEME_KEY = "mentariTheme";
   var THEME_VAR = {
     primary: "--mm-primary", onPrimary: "--mm-on-primary",
     primaryContainer: "--mm-primary-container", onPrimaryContainer: "--mm-on-primary-container",
@@ -227,16 +230,88 @@
       outlineVariant: "#554440"
     }
   };
-  function getTheme() {
+
+  var THEME_LABELS = {
+    sunset: "Sunset (Bawaan)",
+    rimba: "Rimba · Teal",
+    anggrek: "Anggrek · Ungu",
+    senja: "Senja · Olive",
+    samudra: "Samudra · Biru",
+    bata: "Bata · Terakota"
+  };
+  var currentTheme = "sunset";
+  var themeListeners = [];
+
+  function normalizeTheme(name) {
+    return THEMES[name] ? name : "sunset";
+  }
+  function extStore() {
     try {
-      var t = localStorage.getItem(THEME_KEY);
-      return THEMES[t] ? t : "sunset";
+      var api = globalThis.browser || globalThis.chrome;
+      return api && api.storage ? api.storage.local : null;
     } catch (_) {
-      return "sunset";
+      return null;
     }
   }
+  function readSharedTheme(cb) {
+    var store = extStore();
+    if (!store) { cb(null); return; }
+    try {
+      store.get(SHARED_THEME_KEY, function (res) {
+        cb(res ? res[SHARED_THEME_KEY] : null);
+      });
+    } catch (_) {
+      cb(null);
+    }
+  }
+  function writeSharedTheme(name) {
+    var store = extStore();
+    if (!store) return;
+    var patch = {};
+    patch[SHARED_THEME_KEY] = name;
+    try { store.set(patch); } catch (_) {}
+  }
+  function emitTheme(name) {
+    themeListeners.slice().forEach(function (fn) {
+      try { fn(name); } catch (_) {}
+    });
+  }
+  function commitTheme(name, fromShared) {
+    name = normalizeTheme(name);
+    if (!fromShared) writeSharedTheme(name);
+    try { localStorage.setItem(THEME_KEY, name); } catch (_) {}
+    if (name === currentTheme) return;
+    currentTheme = name;
+    applyStoredTheme();
+    emitTheme(name);
+  }
+  /* Seed from the shared store, then keep this context live. When nothing
+   * shared exists yet (first run after upgrade) the per-origin value seeds
+   * it, so older installs migrate instead of snapping back to sunset. */
+  function initTheme() {
+    var local = "sunset";
+    try { local = normalizeTheme(localStorage.getItem(THEME_KEY)); } catch (_) {}
+    currentTheme = local;
+    readSharedTheme(function (shared) {
+      if (shared && THEMES[shared]) {
+        if (shared !== currentTheme) commitTheme(shared, true);
+      } else {
+        writeSharedTheme(currentTheme);
+      }
+    });
+    var store = extStore();
+    if (store && store.onChanged) {
+      store.onChanged.addListener(function (changes, area) {
+        if (area !== "local" || !changes[SHARED_THEME_KEY]) return;
+        commitTheme(changes[SHARED_THEME_KEY].newValue, true);
+      });
+    }
+  }
+  function getTheme() {
+    return currentTheme;
+  }
   function applyStoredTheme() {
-    var theme = THEMES[getTheme()];
+    var theme = THEMES[currentTheme];
     var root = document.documentElement;
     if (!root || !root.style) return;
     Object.keys(THEME_VAR).forEach(function (key) {
@@ -245,11 +320,15 @@
     });
   }
   function setTheme(name) {
-    if (!THEMES[name]) name = "sunset";
-    try {
-      localStorage.setItem(THEME_KEY, name);
-    } catch (_) {}
-    applyStoredTheme();
+    commitTheme(name, false);
+    return currentTheme;
+  }
+  function onThemeChange(fn) {
+    themeListeners.push(fn);
+    return function () {
+      var i = themeListeners.indexOf(fn);
+      if (i >= 0) themeListeners.splice(i, 1);
+    };
   }
 
   function ensureFont() {
@@ -323,7 +402,11 @@
     getTheme: getTheme,
     setTheme: setTheme,
     applyStoredTheme: applyStoredTheme,
+    onThemeChange: onThemeChange,
+    themeLabels: THEME_LABELS,
     themes: Object.keys(THEMES),
     CSS: CSS
   };
+
+  initTheme();
 })();

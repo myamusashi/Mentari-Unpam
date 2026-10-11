@@ -9,7 +9,7 @@
       "strict_min_version": "109.0"
     }
   },
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "storage"],
   "host_permissions": [
     "https://mentari.unpam.ac.id/*",
     "https://my.unpam.ac.id/*",
