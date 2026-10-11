@@ -1,3 +1,6 @@
+// Shared M3 foundation for the floating project card (host login overrides below stay untouched).
+if (window.MentariM3) window.MentariM3.ensure();
+
 // Injeksi CSS untuk Redesign Login Form (Dark Glassmorphism)
 const style = document.createElement("style");
 style.textContent = `
@@ -215,40 +218,36 @@ const intervalId = setInterval(() => {
   if (loginForm && !document.getElementById('mentari-info-floating')) {
     const infoFloating = document.createElement('div');
     infoFloating.id = 'mentari-info-floating';
+    infoFloating.className = 'mm mm-card mm-card-elev';
+    if (window.MentariM3) window.MentariM3.applyTheme(infoFloating);
     infoFloating.style.cssText = `
       position: fixed;
       bottom: 25px;
       left: 25px;
       width: 280px;
       padding: 18px;
-      background: rgba(230, 232, 235, 0.8);
-      backdrop-filter: blur(15px);
-      border-radius: 12px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       z-index: 9999;
-      transition: all 0.3s ease;
     `;
     infoFloating.innerHTML = `
-      <div style="font-size:11px; color:#4a4d51; display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:11px; color:var(--mm-on-surface-variant); display:flex; flex-direction:column; gap:10px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span style="opacity:0.6; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Project</span>
-          <span style="color:#1a1c1e; font-weight:800;">Mentari Mod v2.0 Sunset</span>
+          <span style="color:var(--mm-on-surface); font-weight:800;">Mentari Mod v2.0 Sunset</span>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span style="opacity:0.6; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Author</span>
-          <span style="color:#d4af37; font-weight:800;"> <a href="https://github.com/Lukman754" target="_blank" style="color:#d4af37; text-decoration:none;">Lukman754</a></span>
+          <span style="color:var(--mm-primary); font-weight:800;"> <a href="https://github.com/Lukman754" target="_blank" style="color:var(--mm-primary); text-decoration:none;">Lukman754</a></span>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span style="opacity:0.6; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Connect</span>
           <div style="display:flex; gap:14px;">
-            <a href="https://instagram.com/_.chopin" target="_blank" style="color:#d4af37; text-decoration:none;">
+            <a href="https://instagram.com/_.chopin" target="_blank" style="color:var(--mm-primary); text-decoration:none;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m4.4 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9m0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m5.2-2.15c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75Z"/></svg>
             </a>
-            <a href="https://facebook.com/lukmanmauludin754" target="_blank" style="color:#d4af37; text-decoration:none;">
+            <a href="https://facebook.com/lukmanmauludin754" target="_blank" style="color:var(--mm-primary); text-decoration:none;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.82c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"/></svg>
             </a>
-            <a href="https://github.com/Lukman754" target="_blank" style="color:#d4af37; text-decoration:none;">
+            <a href="https://github.com/Lukman754" target="_blank" style="color:var(--mm-primary); text-decoration:none;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg>
             </a>
           </div>

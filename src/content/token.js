@@ -20,619 +20,6 @@
       GITHUB_API:
         "https://api.github.com/repos/lukman754/Mentari-Unpam/releases/latest",
     },
-    STYLES: `
-       #token-runner-popup { 
-         position: fixed; z-index: 99999; top: 70px; right: 20px; width: 500px; 
-         background: #121212; color: #eee; backdrop-filter: blur(25px); 
-         border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; 
-         box-shadow: 0 15px 50px rgba(0,0,0,0.4); overflow: hidden; 
-         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); visibility: hidden; opacity: 0; 
-         transform: translateY(-15px) scale(0.95); pointer-events: none; 
-         font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-       }
-      #token-runner-popup.active { visibility: visible; opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-      
-      /* Light Theme Adaptation */
-      #token-runner-popup.light-theme {
-        background: #ffffff; 
-        color: #17202a;
-        border: 1px solid #cbd5e1;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-      }
-      #token-runner-popup.light-theme .popup-header {
-        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-        border-bottom-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .popup-title {
-        color: #0d47a1;
-      }
-      #token-runner-popup.light-theme .token-tabs {
-        background: #cbd5e1;
-        border-color: #94a3b8;
-      }
-      #token-runner-popup.light-theme .token-tab {
-        color: #475569;
-      }
-      #token-runner-popup.light-theme .token-tab:hover {
-        color: #0f172a;
-        background: rgba(255, 255, 255, 0.5);
-      }
-      #token-runner-popup.light-theme .token-tab.active {
-        color: #075985;
-        background: #ffffff;
-        border-color: #93c5fd;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      }
-      #token-runner-popup.light-theme .data-card, 
-      #token-runner-popup.light-theme .course-card {
-        background: #ffffff;
-        border-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .course-card-header {
-        background: #e2e8f0;
-        border-bottom-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .course-progress-track {
-        background: rgba(0, 0, 0, 0.1);
-      }
-      #token-runner-popup.light-theme .course-card-header h2 {
-        color: #0d47a1;
-      }
-      #token-runner-popup.light-theme .course-card {
-        background: #ffffff;
-        border-color: #cbd5e1;
-        box-shadow: 0 2px 10px rgba(15,23,42,0.05);
-      }
-      #token-runner-popup.light-theme .course-card-header {
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-      }
-      #token-runner-popup.light-theme .course-title,
-      #token-runner-popup.light-theme .course-meeting-label {
-        color: inherit;
-      }
-      #token-runner-popup.light-theme .course-code,
-      #token-runner-popup.light-theme .course-progress-label {
-        color: #64748b;
-      }
-      #token-runner-popup.light-theme .course-progress-value {
-        color: #166534;
-      }
-      #token-runner-popup.light-theme .course-chip {
-        border: 1px solid transparent;
-      }
-      #token-runner-popup.light-theme .course-chip-sks {
-        background: #e0f2fe !important;
-        border-color: #7dd3fc !important;
-        color: #075985 !important;
-      }
-      #token-runner-popup.light-theme .course-chip-day {
-        background: #dcfce7 !important;
-        border-color: #86efac !important;
-        color: #166534 !important;
-      }
-      #token-runner-popup.light-theme .course-chip-class {
-        background: #ffedd5 !important;
-        border-color: #fdba74 !important;
-        color: #c2410c !important;
-      }
-      #token-runner-popup.light-theme .course-card-body {
-        background: #f8fafc;
-        border-top-color: #e2e8f0 !important;
-      }
-      #token-runner-popup.light-theme .section-card {
-        background: #ffffff;
-        border-color: #e2e8f0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-      }
-      #token-runner-popup.light-theme .section-header {
-        background: linear-gradient(90deg, #f8fafc, #f1f5f9);
-      }
-      #token-runner-popup.light-theme .section-header:hover {
-        background: linear-gradient(90deg, #e0f2fe, #f1f5f9);
-      }
-      #token-runner-popup.light-theme .section-header h3 {
-        color: #0f172a;
-      }
-      #token-runner-popup.light-theme .section-badge-pill {
-        background: #e2e8f0;
-        color: #475569;
-        border-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .section-content {
-        background: #f8fafc;
-        border-top-color: #e2e8f0;
-      }
-      #token-runner-popup.light-theme .item-row {
-        background: #ffffff;
-        border-color: #e2e8f0;
-      }
-      #token-runner-popup.light-theme .item-row:hover {
-        background: #f1f5f9 !important;
-        border-color: #38bdf8;
-      }
-      #token-runner-popup.light-theme .item-row:hover .item-title {
-        color: #ff7b00;
-      }
-      #token-runner-popup.light-theme .item-title {
-        color: #1e293b;
-      }
-      #token-runner-popup.light-theme .item-meta {
-        color: #475569;
-        opacity: 1;
-      }
-      #token-runner-popup.light-theme .card-title {
-         color: #1e293b;
-      }
-      #token-runner-popup.light-theme .student-item {
-        background: #ffffff;
-      }
-      #token-runner-popup.light-theme .student-list-card,
-      #token-runner-popup.light-theme .settings-section,
-      #token-runner-popup.light-theme .settings-profile {
-        background: #ffffff;
-        border-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .student-list-header,
-      #token-runner-popup.light-theme .settings-section-header {
-        background: #e2e8f0;
-        border-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .student-row:hover,
-      #token-runner-popup.light-theme .settings-row:hover {
-        background: #f1f5f9;
-        border-color: rgba(0, 0, 0, 0.12);
-      }
-      #token-runner-popup.light-theme .student-row {
-        background: rgba(0, 0, 0, 0.02);
-        border-color: rgba(0, 0, 0, 0.06);
-      }
-      #token-runner-popup.light-theme .student-avatar {
-        background: #e0f2fe;
-        color: #0284c7;
-        border-color: #7dd3fc;
-      }
-      #token-runner-popup.light-theme .student-name,
-      #token-runner-popup.light-theme .settings-row-title {
-        color: #1e293b;
-      }
-      #token-runner-popup.light-theme .student-count,
-      #token-runner-popup.light-theme .student-nim,
-      #token-runner-popup.light-theme .student-list-title .ms,
-      #token-runner-popup.light-theme .settings-section-title .ms {
-        color: #075985;
-      }
-      #token-runner-popup.light-theme .student-count {
-        background: #e0f2fe;
-        border-color: #7dd3fc;
-      }
-      #token-runner-popup.light-theme .student-meta,
-      #token-runner-popup.light-theme .settings-row-desc {
-        color: #475569;
-        opacity: 0.85;
-      }
-      #token-runner-popup.light-theme .student-rank,
-      #token-runner-popup.light-theme .settings-section-label {
-        color: #64748b;
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .settings-section-title {
-        color: #0f172a;
-      }
-      #token-runner-popup.light-theme .settings-disclaimer {
-        background: #fff7ed;
-        border-color: #fdba74;
-      }
-      #token-runner-popup.light-theme .student-item div {
-        color: #334155;
-      }
-      #token-runner-popup.light-theme .settings-label {
-        color: #1e293b;
-      }
-      #token-runner-popup.light-theme .settings-desc {
-        color: #475569;
-      }
-      #token-runner-popup.light-theme .settings-area {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-      }
-      #token-runner-popup.light-theme .settings-card-inner {
-        background: #e0f2fe;
-        border-color: #7dd3fc;
-      }
-      #token-runner-popup.light-theme select,
-      #token-runner-popup.light-theme input[type="text"] {
-        background: #ffffff !important;
-        color: #0f172a !important;
-        border-color: #64748b !important;
-      }
-      #token-runner-popup.light-theme #set-quiz-delay {
-        background: #f1f5f9 !important;
-        color: #0f172a !important;
-        border: 1px solid #64748b !important;
-        font-weight: 600;
-      }
-      #token-runner-popup.light-theme input[type="text"]::placeholder,
-      #token-runner-popup.light-theme #set-quiz-delay::placeholder {
-        color: #64748b;
-      }
-      #token-runner-popup.light-theme .token-button.btn-outline {
-        background: #ffffff !important;
-        border-color: #cbd5e1 !important;
-        color: #1e293b !important;
-      }
-      #token-runner-popup.light-theme .token-button.btn-outline:hover {
-        background: #f1f5f9 !important;
-      }
-      #token-runner-popup.light-theme .settings-footer {
-        color: #64748b;
-      }
-      #token-runner-popup.light-theme .mentari-model-item {
-        background: #ffffff;
-        border-color: #cbd5e1;
-        color: #1e293b;
-      }
-      #token-runner-popup.light-theme .mentari-model-item:hover {
-        background: #f1f5f9;
-      }
-      #token-runner-popup.light-theme .mentari-model-item.is-active {
-        background: #e0f2fe;
-        border-color: #0284c7;
-        color: #0284c7;
-      }
-      #token-runner-popup.light-theme .mentari-model-item .model-id-sub {
-        color: #475569;
-      }
-      #token-runner-popup.light-theme #set-model-status {
-        color: #475569;
-      }
-      #token-runner-popup.light-theme .topic-badge {
-        background: #e0f2fe;
-        border-color: #7dd3fc;
-        color: #075985!important;
-      }
-      #token-runner-popup.light-theme .topic-badge:hover {
-        background: #e2e8f0;
-        border-color: #0284c7;
-      }
-      #token-runner-popup.light-theme .forum-html-preview {
-        color: #17202a;
-      }
-      #token-runner-popup.light-theme .forum-toggle-btn {
-        background: #e2e8f0;
-        color: #c2410c;
-      }
-      #token-runner-popup.light-theme .icon-forum {
-        background: #dbeafe;
-        color: #1d4ed8;
-      }
-      #token-runner-popup.light-theme .icon-quiz {
-        background: #dcfce7;
-        color: #166534;
-      }
-      #token-runner-popup.light-theme .icon-material {
-        background: #ffedd5;
-        color: #c2410c;
-      }
-      #token-runner-popup.light-theme .section-toggle {
-        color: #334155;
-        opacity: 0.85;
-      }
-      #token-runner-popup.light-theme .section-toggle.active {
-        color: #f0872d;
-        opacity: 1;
-      }
-
-      #token-runner-popup *::-webkit-scrollbar { width: 4px; }
-      #token-runner-popup *::-webkit-scrollbar-thumb { background: rgba(249, 224, 144, 0.3); border-radius: 10px; }
-      
-      @media (max-width: 600px) { #token-runner-popup { width: 100%!important; left: 0!important; right: 0!important; border-radius: 0!important; height: 100vh!important; top: 50px!important; transform: translateX(100%)!important; } #token-runner-popup.active { transform: translateX(0)!important; } }
-      .popup-content { display: flex; flex-direction: column; height: 100%; max-height: 90vh; }
-      .popup-header {
-        padding: 12px 14px;
-        background: rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        flex-shrink: 0;
-      }
-      .header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-      .popup-title {
-        font-weight: 800;
-        font-size: 15px;
-        color: #f0872d;
-        line-height: 1.2;
-        letter-spacing: 0.5px;
-      }
-      .popup-subtitle {
-        font-size: 9px;
-        color: rgba(148, 163, 184, 0.8);
-        font-weight: 500;
-        letter-spacing: 0.3px;
-        margin-top: 1px;
-        display: block;
-      }
-      .token-tabs {
-        display: flex;
-        gap: 4px;
-        background: rgba(0, 0, 0, 0.35);
-        padding: 2px;
-        border-radius: 8px;
-        flex-shrink: 0;
-      }
-      .token-tab {
-        flex: 1;
-        padding: 12px 10px;
-        font-size: 11px;
-        font-weight: 600;
-        color: #94a3b8;
-        background: transparent;
-        border: 1px solid transparent;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        position: relative;
-      }
-      .token-tab:hover {
-        color: #f1f5f9;
-        background: rgba(255, 255, 255, 0.05);
-      }
-      .token-tab.active {
-        color: #f0872d;
-        background: rgba(240, 135, 45, 0.16);
-        border-color: rgba(240, 135, 45, 0.3);
-        font-weight: 700;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      }
-      .token-tab .ms { font-size: 15px; }
-      .token-tab-badge { min-width:14px; height:14px; margin-left:3px; padding:0 4px; display:none; align-items:center; justify-content:center; border-radius:10px; background:#ef4444; color:#fff; font-size:9px; font-weight:800; line-height:1; }
-      .token-tab-content { display: none; padding: 16px; flex: 1; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; }
-      .token-tab-content.active { display: block; }
-      .token-loading-bar { position: absolute; top: 0; left: 0; height: 2px; width: 0; background: #3d99e3; transition: width 0.3s; z-index: 10; }
-      .token-loading-bar.active { width: 100%; }
-      .toast { position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:8px 16px;border-radius:50px;box-shadow:0 5px 15px rgba(0,0,0,0.4);z-index:10000;font-family:system-ui;border:1px solid #444;font-size:11px;animation:toastIn 0.3s; }
-      @keyframes toastIn { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
-      .token-button { background: #3d99e3; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); }
-      .token-button:hover { background: #1976d2; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-      #token-runner-popup .forum-reply-parent,
-      #token-runner-popup .forum-reply-input { background: #242b35 !important; color: #f1f5f9 !important; border-color: #64748b !important; }
-      #token-runner-popup .forum-reply-parent option { background: #242b35; color: #f1f5f9; }
-      #token-runner-popup.light-theme .forum-reply-parent,
-      #token-runner-popup.light-theme .forum-reply-input { background: #ffffff !important; color: #17202a !important; border-color: #94a3b8 !important; }
-      #token-runner-popup.light-theme .forum-reply-parent option { background: #ffffff; color: #17202a; }
-      .mentari-spin { display: inline-flex; animation: mentari-spin 0.9s linear infinite; }
-      @keyframes mentari-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
-      .switch input { opacity: 0; width: 0; height: 0; }
-      .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 22px; }
-      .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-      input:checked + .slider { background-color: #f0872d; }
-      input:checked + .slider:before { transform: translateX(22px); }
-      .data-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-      .card {
-  -webkit-tap-highlight-color: transparent;
-}
-  figure.image {
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-}
-      .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-      .card-title { font-size: 14px; font-weight: 700; color: #eee; margin: 0; opacity: 0.9; }
-      .student-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; margin-bottom: 8px; transition: background 0.2s; }
-      .student-item:hover { background: rgba(255,255,255,0.04); }
-      .student-absen { width: 24px; height: 24px; background: #f0872d; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
-      .student-list-card, .settings-section, .settings-profile { border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,0.02); margin-bottom: 12px; }
-      .student-list-header, .settings-section-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 12px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); }
-      .student-list-title, .settings-section-title { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; }
-      .student-list-title .ms, .settings-section-title .ms { color: #3d99e3; font-size: 17px; }
-      .student-count { min-width: 20px; padding: 2px 7px; border: 1px solid rgba(61,153,227,0.2); border-radius: 5px; background: rgba(61,153,227,0.12); color: #38bdf8; font-size: 10px; font-weight: 800; line-height: 1.2; text-align: center; }
-      .student-model-list { display: flex; flex-direction: column; gap: 5px; max-height: 580px; overflow-y: auto; padding: 8px; }
-      .student-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: all 0.15s; }
-      .student-row:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
-      .student-avatar { width: 26px; height: 26px; flex-shrink: 0; border-radius: 6px; background: rgba(61,153,227,0.12); color: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 1px solid rgba(61,153,227,0.2); }
-      .student-info { flex: 1; min-width: 0; }
-      .student-name { color: #f1f5f9; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .student-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 1px; color: #94a3b8; font-size: 10px; opacity: 0.6; }
-      .student-nim { font-family: monospace; color: #3d99e3; font-weight: 500; opacity: 1; }
-      .student-rank { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; background: rgba(255,255,255,0.04); color: #94a3b8; font-size: 9px; font-weight: 700; flex-shrink: 0; text-align: center; }
-      .settings-profile { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-color: rgba(240,135,45,0.18); background: rgba(240,135,45,0.06); }
-      .settings-avatar { width: 38px; height: 38px; flex-shrink: 0; border-radius: 8px; background: linear-gradient(135deg, #f0872d, #ffb36b); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; }
-      .settings-profile-info { min-width: 0; }
-      .settings-label { color: #f0872d; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .settings-desc { color: #94a3b8; font-size: 10px; line-height: 1.5; }
-      .settings-section { overflow: hidden; }
-      .settings-section-header { padding: 9px 12px; }
-      .settings-section-label { color: #94a3b8; font-size: 9px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
-      .settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
-      .settings-row:last-child { border-bottom: 0; }
-      .settings-row-main { min-width: 0; }
-      .settings-row-title { display: flex; align-items: center; gap: 7px; color: #f1f5f9; font-size: 12px; font-weight: 600; }
-      .settings-row-title .ms { color: #f0872d; font-size: 16px; }
-      .settings-row-desc { margin: 2px 0 0 23px; color: #94a3b8; font-size: 10px; }
-      .settings-quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
-      #token-runner-popup .token-button.btn-outline { background: transparent; border-color: rgba(240,135,45,0.45); color: #f1f5f9; }
-      #token-runner-popup .token-button.btn-outline:hover { background: rgba(240,135,45,0.12); border-color: rgba(240,135,45,0.7); }
-      .settings-model-list { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; padding: 8px; }
-      .settings-disclaimer { padding: 8px 10px; margin-bottom: 12px; border-left: 2px solid rgba(240,135,45,0.45); border-radius: 4px; background: rgba(240,135,45,0.05); }
-      .settings-status-badge { display: inline-flex; align-items: center; padding: 2px 6px; border: 1px solid rgba(74,222,128,0.2); border-radius: 5px; background: rgba(74,222,128,0.12); color: #4ade80; font-size: 9px; font-weight: 700; line-height: 1.2; }
-      .settings-status-badge.is-error { border-color: rgba(251,146,60,0.2); background: rgba(251,146,60,0.12); color: #fb923c; }
-      .mentari-model-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: all 0.15s; }
-      .mentari-model-item:hover { background: rgba(255,255,255,0.06); }
-      .mentari-model-item.is-active { border-color: rgba(61,153,227,0.5); background: rgba(61,153,227,0.08); }
-      .mentari-model-item .model-state-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: rgba(255,255,255,0.2); }
-      .mentari-model-item.is-active .model-state-dot { background: #3d99e3; box-shadow: 0 0 6px rgba(61,153,227,0.7); }
-      .mentari-model-item.is-limited .model-state-dot { background: #fb923c; }
-      .model-limit-badge { display: inline-flex; align-items: center; margin-left: 6px; padding: 2px 6px; border: 1px solid rgba(251,146,60,0.2); border-radius: 5px; background: rgba(251,146,60,0.12); color: #fb923c; font-size: 9px; font-weight: 700; line-height: 1.2; vertical-align: middle; }
-
-      /* Detailed Forum Styles */
-      .course-card { margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,0.01); }
-      .course-card-header { padding: 12px 16px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); }
-      .course-card-header h2 { margin: 0; font-size: 14px; color: #3d99e3; font-weight: 700; }
-      .course-card-code { font-size: 10px; opacity: 0.5; margin-top: 4px; display: block; }
-      .course-chip-sks { background: rgba(61,153,227,0.15); color: #3d99e3; }
-      .course-chip-day { background: rgba(121,187,124,0.15); color: #79bb7c; }
-      .course-chip-class { background: rgba(240,135,45,0.15); color: #f0872d; }
-      .course-progress-value { color: #79bb7c; }
-      .course-progress-track { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; position: relative; }
-      .course-progress-bar { height: 100%; background: linear-gradient(90deg, #3d99e3, #79bb7c); border-radius: 4px; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-      /* Clean LMS Section Cards */
-      .section-card {
-        margin-bottom: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.02);
-        transition: border-color 0.2s ease;
-      }
-      .section-card:hover {
-        border-color: rgba(255, 255, 255, 0.14);
-      }
-      .section-card.active,
-      .section-card:has(.section-content.active) {
-        border-color: #3d99e3 !important;
-      }
-      .section-header {
-        padding: 8px 12px;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.03);
-        transition: background 0.2s ease;
-      }
-      .section-header:hover {
-        background: rgba(255, 255, 255, 0.06);
-      }
-      .section-header-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .section-header-icon {
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
-        background: rgba(61, 153, 227, 0.12);
-        color: #3d99e3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-      }
-      .section-header h3 {
-        margin: 0;
-        font-size: 12px;
-        font-weight: 700;
-        color: #f1f5f9;
-        pointer-events: none;
-      }
-      .section-toggle {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        transition: transform 0.25s ease, background 0.2s, color 0.2s;
-        opacity: 0.7;
-        pointer-events: none;
-        background: rgba(255, 255, 255, 0.04);
-      }
-      .section-toggle.active {
-        transform: rotate(180deg);
-        opacity: 1;
-        color: #3d99e3;
-        background: rgba(61, 153, 227, 0.15);
-      }
-      .section-content {
-        display: none;
-        padding: 8px;
-        background: rgba(0, 0, 0, 0.15);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        gap: 6px;
-      }
-      .section-content.active {
-        display: flex;
-        flex-direction: column;
-      }
-      .section-actions { padding: 0 4px 8px; display: flex; justify-content: center; }
-      
-      .item-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 10px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        text-decoration: none;
-        color: inherit;
-        transition: background 0.2s ease;
-        cursor: pointer;
-        position: relative;
-      }
-      .item-row:hover {
-        background: rgba(255, 255, 255, 0.07) !important;
-      }
-      .item-row:hover .item-title { color: #3d99e3; }
-      .item-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        font-size: 13px;
-      }
-      .icon-forum { background: rgba(61, 153, 227, 0.15); color: #38bdf8; }
-      .icon-quiz { background: rgba(121, 187, 124, 0.15); color: #4ade80; }
-      .icon-material { background: rgba(240, 135, 45, 0.15); color: #fb923c; }
-      .item-info { flex: 1; overflow: hidden; }
-      .item-title { font-size: 12px; font-weight: 600; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: all 0.2s; color: #eee; }
-      .item-meta { font-size: 10px; opacity: 0.7; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
-      .item-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        padding: 1px 6px;
-        border-radius: 5px;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-        line-height: 1.2;
-      }
-      .status-done { background: rgba(74, 222, 128, 0.12); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.2); }
-      .status-todo { background: rgba(251, 146, 60, 0.12); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.2); }
-      .topic-badge { display: flex; align-items: center; gap: 6px; padding: 5px 8px; background: rgba(255,255,255,0.04); border-radius: 5px; font-size: 10px; border: 1px solid rgba(255,255,255,0.06); color: #3d99e3!important; text-decoration: none!important; transition: all 0.2s; width: 100%; box-sizing: border-box; overflow: hidden; }
-      .topic-badge:hover { background: rgba(144, 202, 249, 0.1); border-color: rgba(144,202,249,0.2); }
-      .ms { font-family: 'Material Symbols Rounded'; font-size: 14px; font-style: normal; font-weight: normal; line-height: 1; display: inline-flex; align-items: center; vertical-align: middle; user-select: none; letter-spacing: normal; text-transform: none; white-space: nowrap; }
-      /* Forum Content Reset */
-      .forum-html-preview { all: revert; font-family: inherit; color: inherit; font-size: 11px; line-height: 1.5; }
-      .forum-html-preview p { margin-bottom: 8px; }
-      .forum-html-preview ul, .forum-html-preview ol { padding-left: 20px; margin-bottom: 8px; }
-      .forum-html-preview li { margin-bottom: 4px; }
-
-      /* Empty State */
-      .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; }
-      .empty-icon { font-size: 48px; margin-bottom: 16px; color: #3d99e3; background: rgba(144, 202, 249, 0.05); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(144, 202, 249, 0.1); }
-      .empty-title { font-size: 16px; font-weight: 700; color: #eee; margin-bottom: 6px; }
-      .empty-desc { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.6; max-width: 240px; }
-      
-      #token-runner-popup.light-theme .empty-title { color: #1e293b; }
-      #token-runner-popup.light-theme .empty-desc { color: #64748b; }
-      #token-runner-popup.light-theme .empty-icon { background: rgba(25, 118, 210, 0.04); border-color: rgba(25, 118, 210, 0.08); }
-
-    `,
   };
 
   const State = {
@@ -742,35 +129,14 @@
       navigator.clipboard.writeText(text).then(() => this.toast(msg));
     },
     toast(msg) {
-      const t = document.createElement("div");
-      t.style =
-        "position:fixed;bottom:50px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#f0872d;padding:8px 16px;border-radius:50px;font-size:11px;z-index:100000;box-shadow:0 5px 15px rgba(0,0,0,0.5);border:1px solid rgba(240,135,45,0.2);animation:msgIn 0.3s;white-space:nowrap;";
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(() => t.remove(), 2500);
+      if (window.MentariM3) window.MentariM3.snackbar(msg);
     },
     progressToast(msg) {
-      const id = "mentari-progress-toast";
-      let t = document.getElementById(id);
-      if (!t) {
-        t = document.createElement("div");
-        t.id = id;
-        t.style =
-          "position:fixed;bottom:50px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#f0872d;padding:9px 16px;border-radius:8px;font-size:11px;font-weight:600;z-index:100000;box-shadow:0 5px 15px rgba(0,0,0,0.5);border:1px solid rgba(240,135,45,0.3);animation:msgIn 0.3s;white-space:nowrap;";
-        document.body.appendChild(t);
-      }
-      t.innerHTML = `<span class="ms" style="font-size:15px;vertical-align:middle;margin-right:6px;">sync</span>${msg}`;
+      if (window.MentariM3) window.MentariM3.snackbar(msg);
     },
-    closeProgressToast() {
-      document.getElementById("mentari-progress-toast")?.remove();
-    },
+    closeProgressToast() {},
     successToast(msg) {
-      const t = document.createElement("div");
-      t.style =
-        "position:fixed;bottom:50px;left:50%;transform:translateX(-50%);background:#153b2a;color:#8ee6b0;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:100000;box-shadow:0 5px 18px rgba(0,0,0,0.5);border:1px solid rgba(142,230,176,0.35);animation:msgIn 0.3s;white-space:nowrap;";
-      t.innerHTML = `<span class="ms" style="font-size:15px;vertical-align:middle;margin-right:5px;">check_circle</span>${msg}`;
-      document.body.appendChild(t);
-      setTimeout(() => t.remove(), 3000);
+      if (window.MentariM3) window.MentariM3.snackbar(msg);
     },
     updateQuota(headers) {
       try {
@@ -799,13 +165,7 @@
       return num;
     },
     injectMaterialIcons() {
-      if (document.getElementById("material-icons-css")) return;
-      const link = document.createElement("link");
-      link.id = "material-icons-css";
-      link.rel = "stylesheet";
-      link.href =
-        "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,0,0";
-      document.head.appendChild(link);
+      if (window.MentariM3) window.MentariM3.ensure();
     },
     parseMinutesToMs(val) {
       if (!val) return 0;
@@ -837,9 +197,7 @@
     applyTheme() {
       const container = document.getElementById("token-runner-popup");
       if (!container) return;
-      const isLight = document.querySelector(".css-1yxmbwk") !== null;
-      if (isLight) container.classList.add("light-theme");
-      else container.classList.remove("light-theme");
+      if (window.MentariM3) window.MentariM3.applyTheme(container);
     },
   };
 
@@ -1044,39 +402,39 @@ ${questionText}`;
 
   const UIRenderer = {
     injectStyles() {
-      if (document.getElementById("mentari-styles")) return;
-      const s = document.createElement("style");
-      s.id = "mentari-styles";
-      s.textContent = Config.STYLES;
-      document.head.appendChild(s);
+      if (window.MentariM3) window.MentariM3.ensure();
     },
     createPopup() {
       if (document.getElementById("token-runner-popup")) return;
       const p = document.createElement("div");
       p.id = "token-runner-popup";
+      p.className = "mm mm-popup";
+      p.style.cssText =
+        "top:70px; right:20px; width:500px; max-height:90vh; display:flex; flex-direction:column; visibility:hidden; opacity:0; transform:translateY(-15px) scale(0.95); pointer-events:none; transition:opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;";
       p.innerHTML = `
-        <div class="token-loading-bar"></div>
-        <div class="popup-content">
-          <div class="popup-header">
-            <div class="header-top">
+        <div class="token-loading-bar mm-linear mm-linear-ind" style="position:absolute; top:0; left:0; right:0; display:none;"><i></i></div>
+        <div class="popup-content mm-scroll" style="display:flex; flex-direction:column; height:100%; max-height:90vh;">
+          <div class="popup-header mm-topbar" style="flex-wrap:wrap;">
+            <div class="header-top" style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:10px;">
               <div style="display:flex; flex-direction:column;">
-                <span class="popup-title">MENTARI MOD</span>
-                <span class="popup-subtitle">mod by <a style="color: #c8ad95ff; text-decoration: none;" href="https://github.com/Lukman754">Lukman754</a></span>
+                <span class="popup-title mm-eyebrow">MENTARI MOD</span>
+                <span class="popup-subtitle mm-subtitle">mod by <a style="color:inherit; text-decoration:none;" href="https://github.com/Lukman754">Lukman754</a></span>
               </div>
-              <button id="token-refresh-btn" class="token-button" title="Refresh status" style="padding:6px 10px; border-radius:8px;"><span class="ms">refresh</span></button>
+              <button id="token-refresh-btn" class="mm-btn mm-btn-sm mm-btn-tonal" title="Refresh status"><span class="ms">refresh</span></button>
             </div>
-            <div class="token-tabs">
-              <button class="token-tab active" data-tab="forum-tab" title="Forum"><span class="ms">forum</span><span id="forum-tab-badge" class="token-tab-badge"></span></button>
-              <button class="token-tab" data-tab="mhs-tab" title="Mahasiswa"><span class="ms">groups</span></button>
-              <button class="token-tab" data-tab="set-tab" title="Pengaturan"><span class="ms">settings</span></button>
+            <div class="token-tabs mm-tabs" style="width:100%;">
+              <button class="token-tab mm-tab mm-tab-on active" data-tab="forum-tab" title="Forum"><span class="ms">forum</span><span id="forum-tab-badge" class="token-tab-badge mm-badge" style="display:none;"></span></button>
+              <button class="token-tab mm-tab" data-tab="mhs-tab" title="Mahasiswa"><span class="ms">groups</span></button>
+              <button class="token-tab mm-tab" data-tab="set-tab" title="Pengaturan"><span class="ms">settings</span></button>
             </div>
           </div>
-          <div class="token-tab-content active" id="forum-tab-tab"></div>
-          <div class="token-tab-content" id="mhs-tab-tab"></div>
-          <div class="token-tab-content" id="set-tab-tab"></div>
+          <div class="token-tab-content mm-scroll active" id="forum-tab-tab" style="display:block; padding:16px; flex:1; overflow-y:auto; overflow-x:hidden; box-sizing:border-box;"></div>
+          <div class="token-tab-content mm-scroll" id="mhs-tab-tab" style="display:none; padding:16px; flex:1; overflow-y:auto; overflow-x:hidden; box-sizing:border-box;"></div>
+          <div class="token-tab-content mm-scroll" id="set-tab-tab" style="display:none; padding:16px; flex:1; overflow-y:auto; overflow-x:hidden; box-sizing:border-box;"></div>
         </div>
       `;
       document.body.appendChild(p);
+      if (window.MentariM3) window.MentariM3.applyTheme(p);
       this.initTabs();
       document.getElementById("token-refresh-btn").onclick = (e) => {
         e.stopPropagation();
@@ -1090,18 +448,25 @@ ${questionText}`;
           e.stopPropagation();
           document
             .querySelectorAll(".token-tab, .token-tab-content")
-            .forEach((el) => el.classList.remove("active"));
+            .forEach((el) => {
+              el.classList.remove("active");
+              el.classList.remove("mm-tab-on");
+              if (el.classList.contains("token-tab-content"))
+                el.style.display = "none";
+            });
           t.classList.add("active");
-          document
-            .getElementById(t.dataset.tab + "-tab")
-            .classList.add("active");
+          t.classList.add("mm-tab-on");
+          const panel = document.getElementById(t.dataset.tab + "-tab");
+          if (panel) {
+            panel.classList.add("active");
+            panel.style.display = "block";
+          }
         };
       });
     },
     setLoading(active) {
       const bar = document.querySelector(".token-loading-bar");
-      if (bar)
-        active ? bar.classList.add("active") : bar.classList.remove("active");
+      if (bar) bar.style.display = active ? "block" : "none";
     },
     updatePosition() {
       // Disabled for fixed position consistency across mod windows
@@ -1115,36 +480,23 @@ ${questionText}`;
 
       let html = `
         <div style="margin-bottom:14px;">
-          <a href="https://my.unpam.ac.id/presensi/" target="_blank" style="
-            display:flex; align-items:center; gap:12px;
-            padding:12px 14px;
-            background: rgba(0, 165, 80, 0.08);
-            border: 1px solid rgba(0, 165, 80, 0.2);
-            border-radius:10px;
-            text-decoration:none;
-            transition: background 0.2s, border-color 0.2s;
-          " onmouseover="this.style.background='rgba(0,165,80,0.14)'; this.style.borderColor='rgba(0,165,80,0.35)'"
-             onmouseout="this.style.background='rgba(0,165,80,0.08)'; this.style.borderColor='rgba(0,165,80,0.2)'">
-            <div style="width:36px; height:36px; flex-shrink:0; background:rgba(0,165,80,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#00a550;">
-              <span class="ms" style="font-size:20px;">fact_check</span>
+          <a href="https://my.unpam.ac.id/presensi/" target="_blank" class="mm-list-item" style="text-decoration:none;">
+            <div class="mm-lead"><span class="ms">fact_check</span></div>
+            <div class="mm-list-main">
+              <div class="mm-list-title">Halaman Presensi Mahasiswa</div>
+              <div class="mm-list-sub"><span class="ms" style="font-size:11px;">link</span> my.unpam.ac.id/presensi</div>
             </div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:12px; font-weight:700; color:#00a550; margin-bottom:2px;">Halaman Presensi Mahasiswa</div>
-              <div style="font-size:10px; color:#00a550; opacity:0.65; display:flex; align-items:center; gap:4px;">
-                <span class="ms" style="font-size:11px;">link</span> my.unpam.ac.id/presensi
-              </div>
-            </div>
-            <span class="ms" style="font-size:16px; color:#00a550; opacity:0.5; flex-shrink:0;">open_in_new</span>
+            <span class="ms" style="font-size:16px; opacity:0.5; flex-shrink:0;">open_in_new</span>
           </a>
         </div>
       `;
 
       if (!data.length) {
         html += `
-          <div class="empty-state">
-            <div class="empty-icon"><span class="ms" style="font-size:40px;">cloud_sync</span></div>
-            <div class="empty-title">Data Kosong</div>
-            <div class="empty-desc">Pilih mata kuliah di Mentari agar data forum muncul di sini.</div>
+          <div class="empty-state mm-empty">
+            <div class="empty-icon mm-empty-ic"><span class="ms">cloud_sync</span></div>
+            <div class="empty-title mm-title">Data Kosong</div>
+            <p class="empty-desc">Pilih mata kuliah di Mentari agar data forum muncul di sini.</p>
           </div>
         `;
       } else {
@@ -1171,12 +523,10 @@ ${questionText}`;
 
         if (!coursesHtml.trim()) {
           html += `
-            <div class="empty-state">
-              <div class="empty-icon" style="color: #79bb7c; background: rgba(121, 187, 124, 0.05); border-color: rgba(121, 187, 124, 0.1);">
-                <span class="ms" style="font-size:40px;">task_alt</span>
-              </div>
-              <div class="empty-title">Semua Beres!</div>
-              <div class="empty-desc">Hore! Tidak ada forum diskusi yang perlu dikerjakan saat ini. Istirahatlah sejenak.</div>
+            <div class="empty-state mm-empty">
+              <div class="empty-icon mm-empty-ic"><span class="ms">task_alt</span></div>
+              <div class="empty-title mm-title">Semua Beres!</div>
+              <p class="empty-desc">Hore! Tidak ada forum diskusi yang perlu dikerjakan saat ini. Istirahatlah sejenak.</p>
             </div>
           `;
         } else {
@@ -1279,30 +629,26 @@ ${questionText}`;
       if (!validSectionsHtml.trim()) return "";
 
       return `
-        <div class="course-card" style="margin-bottom: 14px;">
-          <div class="course-card-header" style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 10px; width: 100%;">
-              <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-                <p class="course-title" style="margin: 0; font-weight: 700; font-size: 0.95rem; line-height: 1.35;">${courseTitle}</p>
-                <div style="display: flex; flex-direction: row; align-items: center; gap: 6px; flex-wrap: wrap;">
-                  ${sks ? `<span class="course-chip course-chip-sks" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 6px; font-size: 0.7rem; font-weight: 400;"><span class="ms" style="font-size:11px;">auto_stories</span> ${sks} SKS</span>` : ""}
-                  ${hari ? `<span class="course-chip course-chip-day" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 6px; font-size: 0.7rem; font-weight: 400;"><span class="ms" style="font-size:11px;">calendar_month</span> ${hari}</span>` : ""}
-                  ${kelas ? `<span class="course-chip course-chip-class" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 6px; font-size: 0.7rem; font-weight: 400;"><span class="ms" style="font-size:11px;">school</span> Kelas ${kelas}</span>` : ""}
+        <div class="course-card mm-card mm-card-outline" style="margin-bottom:14px;">
+          <div class="course-card-header mm-card-head" style="flex-direction:column; align-items:stretch; gap:8px;">
+            <div style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; gap:10px; width:100%;">
+              <div style="flex:1; display:flex; flex-direction:column; gap:4px; min-width:0;">
+                <p class="course-title mm-title" style="margin:0;">${courseTitle}</p>
+                <div style="display:flex; flex-direction:row; align-items:center; gap:6px; flex-wrap:wrap;">
+                  ${sks ? `<span class="course-chip course-chip-sks mm-chip mm-chip-ok"><span class="ms" style="font-size:11px;">auto_stories</span> ${sks} SKS</span>` : ""}
+                  ${hari ? `<span class="course-chip course-chip-day mm-chip mm-chip-ok"><span class="ms" style="font-size:11px;">calendar_month</span> ${hari}</span>` : ""}
+                  ${kelas ? `<span class="course-chip course-chip-class mm-chip mm-chip-warn"><span class="ms" style="font-size:11px;">school</span> Kelas ${kelas}</span>` : ""}
                 </div>
-                <span class="course-code" style="opacity: 0.5; font-size: 0.68rem; margin-top: 1px;">Kode Course: ${c.kode_course}</span>
+                <span class="course-code mm-hint">Kode Course: ${c.kode_course}</span>
               </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0;">
-                <span class="course-progress-value" style="font-size: 0.9rem; font-weight: 800; font-family: monospace;">${progressPercent}%</span>
-                <span class="course-progress-label" style="font-size: 0.68rem; opacity: 0.6;">Pertemuan ${lastCompletedSort} / ${totalSorts}</span>
-              </div>
-            </div>
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
-              <div class="course-progress-track">
-                <div class="course-progress-bar" style="width: ${progressPercent}%;"></div>
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0;">
+                <span class="course-progress-value" style="font-size:0.9rem; font-weight:800; font-family:monospace;">${progressPercent}%</span>
+                <span class="course-progress-label mm-hint">Pertemuan ${lastCompletedSort} / ${totalSorts}</span>
               </div>
             </div>
+            <div class="course-progress-track mm-linear" style="width:100%;"><i class="course-progress-bar" style="display:block; width:${progressPercent}%;"></i></div>
           </div>
-          <div class="course-card-body" style="padding: 10px; padding-bottom: 0px; border-top: 1px solid rgba(255,255,255,0.05); width: 100%; box-sizing: border-box;">
+          <div class="course-card-body mm-card-body mm-list" style="padding-bottom:8px;">
             ${validSectionsHtml}
           </div>
         </div>
@@ -1320,26 +666,26 @@ ${questionText}`;
       const sectionId = `sect-${c.kode_course}-${idx}`;
       const sectionUrl = `https://mentari.unpam.ac.id/u-courses/${c.kode_course}?accord_pertemuan=${s.kode_section}`;
       return `
-        <div class="section-card">
-          <div class="section-header" data-target="${sectionId}">
-            <div class="section-header-left">
-              <div class="section-header-icon"><span class="ms">import_contacts</span></div>
-              <h3>${s.nama_section}</h3>
+        <div class="section-card mm-card mm-card-outline">
+          <div class="section-header mm-card-head" data-target="${sectionId}" style="cursor:pointer;">
+            <div class="section-header-left" style="display:flex; align-items:center; gap:8px; min-width:0;">
+              <div class="section-header-icon mm-lead" style="width:24px; height:24px;"><span class="ms">import_contacts</span></div>
+              <h3 class="mm-title" style="font-size:12px; margin:0;">${s.nama_section}</h3>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
               <span class="section-toggle"><span class="ms">expand_more</span></span>
             </div>
           </div>
-          <div class="section-content" id="${sectionId}">
-            <a href="${sectionUrl}" class="item-row" style="background: rgba(240,135,45,0.06); border-color: rgba(240,135,45,0.2);" onclick="event.stopPropagation()">
-              <div class="item-icon" style="background: rgba(240,135,45,0.15); color: #f0872d;">
+          <div class="section-content mm-list" id="${sectionId}" style="display:none;">
+            <a href="${sectionUrl}" class="item-row mm-list-item" onclick="event.stopPropagation()">
+              <div class="item-icon mm-lead">
                 <span class="ms">folder_open</span>
               </div>
-              <div class="item-info">
-                <span class="item-title" style="color: #f0872d;">Buka Pertemuan</span>
-                <div class="item-meta"><span>Buka langsung di Mentari UNPAM</span></div>
+              <div class="item-info mm-list-main">
+                <span class="item-title mm-list-title">Buka Pertemuan</span>
+                <div class="item-meta mm-list-sub"><span>Buka langsung di Mentari UNPAM</span></div>
               </div>
-              <span class="ms" style="opacity:0.6; font-size:14px; flex-shrink:0; color:#f0872d;">chevron_right</span>
+              <span class="ms" style="opacity:0.6; font-size:14px; flex-shrink:0;">chevron_right</span>
             </a>
             ${itemsHtml}
           </div>
@@ -1435,15 +781,15 @@ ${questionText}`;
       const forumKontenId = `fk-${i.id}`;
 
       return `
-           <div class="item-row ${i.completion ? "completed-item" : ""}" 
+           <div class="item-row mm-list-item ${i.completion ? "completed-item" : ""}"
              onclick="if(event.target.closest('a,button,input,select,textarea,form')) return; window.location.href='${cardUrl}';"
-             style="flex-direction:column; align-items:stretch; padding:0; overflow:hidden; ${i.completion ? "opacity:0.8;" : "background: rgba(130, 130, 130, 0.13);"}" data-name="${i.judul}">
-          <div style="display:flex; align-items:center; gap:10px; padding:10px;">
-            <div class="item-icon ${iconClass}"><span class="ms">${icon}</span></div>
-            <div class="item-info">
-              <span class="item-title" style="${i.completion ? "text-decoration: line-through; opacity: 0.6;" : ""}">${i.judul}</span>
-              <div class="item-meta">
-                <span class="item-status ${statusClass}"><span class="ms" style="font-size:10px;">${i.completion ? "check_circle" : "schedule"}</span> ${statusText}</span>
+             style="flex-wrap:wrap; ${i.completion ? "opacity:0.8;" : ""}" data-name="${i.judul}">
+          <div style="display:flex; align-items:center; gap:10px; padding:2px; flex:1; min-width:0;">
+            <div class="item-icon ${iconClass} mm-lead"><span class="ms">${icon}</span></div>
+            <div class="item-info mm-list-main">
+              <span class="item-title mm-list-title" style="${i.completion ? "text-decoration: line-through; opacity: 0.6;" : ""}">${i.judul}</span>
+              <div class="item-meta mm-list-sub">
+                <span class="item-status ${statusClass} mm-chip ${i.completion ? "mm-chip-ok" : "mm-chip-warn"}"><span class="ms" style="font-size:10px;">${i.completion ? "check_circle" : "schedule"}</span> ${statusText}</span>
                 ${i.setting_quiz?.duration ? `<span style="opacity:0.7;"><span class="ms">hourglass_top</span> ${i.setting_quiz.duration} min</span>` : ""}
                 ${isQuiz ? `<span class="quiz-participant-status" data-quiz-id="${i.id}" style="opacity:0.7;">Memuat hasil...</span>` : ""}
               </div>
@@ -1452,21 +798,21 @@ ${questionText}`;
               ${
                 forumKonten
                   ? `
-                <button class="token-button" title="Lihat Konten Forum" onclick="event.stopPropagation(); const el=document.getElementById('${forumKontenId}'); el.style.display=el.style.display==='none'?'block':'none';" style="height:26px; padding:0 8px; background: #3d99e3; color: #000; border-radius:6px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                <button class="mm-btn mm-btn-sm mm-btn-tonal" title="Lihat Konten Forum" onclick="event.stopPropagation(); const el=document.getElementById('${forumKontenId}'); el.style.display=el.style.display==='none'?'block':'none';">
                   <span class="ms" style="font-size:14px;">menu_book</span> Konten
                 </button>`
                   : ""
               }
               ${
                 isForum && i.id
-                  ? `<button type="button" class="token-button forum-reply-btn" title="Balas Forum" data-forum-id="${i.id}" onclick="event.stopPropagation();" style="height:26px; padding:0 10px; background:#79bb7c; color: black; border-radius:6px; font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:4px;"><span class="ms" style="font-size:13px;">reply</span> Balas</button>`
+                  ? `<button type="button" class="mm-btn mm-btn-sm forum-reply-btn" title="Balas Forum" data-forum-id="${i.id}" onclick="event.stopPropagation();"><span class="ms" style="font-size:13px;">reply</span> Balas</button>`
                   : ""
               }
               ${
                 isQuiz || isKuesioner
-                  ? `<button type="button" class="token-button ${isQuiz ? "quiz-ai-submit-btn" : "kuesioner-submit-btn"}" title="${btnTitle}" ${isFinished ? 'disabled="disabled"' : ""} data-course-code="${c.kode_course}" data-section-code="${s.kode_section}" data-quiz-id="${isQuiz ? i.id : ""}" data-quiz-title="${isQuiz ? i.judul : ""}" onclick="event.stopPropagation();" style="${btnStyle}"><span class="ms" style="font-size:15px;">${btnIcon}</span></button>`
+                  ? `<button type="button" class="mm-btn mm-btn-sm ${isQuiz ? "quiz-ai-submit-btn" : "kuesioner-submit-btn"}" title="${btnTitle}" ${isFinished ? 'disabled="disabled"' : ""} data-course-code="${c.kode_course}" data-section-code="${s.kode_section}" data-quiz-id="${isQuiz ? i.id : ""}" data-quiz-title="${isQuiz ? i.judul : ""}" onclick="event.stopPropagation();" style="min-width:32px; padding:0 8px;"><span class="ms" style="font-size:15px;">${btnIcon}</span></button>`
                   : actionUrl !== "#"
-                    ? `<a href="${isFinished ? "#" : actionUrl}" class="token-button" title="${btnTitle}" ${isFinished ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="event.stopPropagation();"'} style="${btnStyle}"><span class="ms" style="font-size:15px;">${btnIcon}</span></a>`
+                    ? `<a href="${isFinished ? "#" : actionUrl}" class="mm-btn mm-btn-sm" title="${btnTitle}" ${isFinished ? 'onclick="event.preventDefault(); event.stopPropagation();"' : 'onclick="event.stopPropagation();"'} style="min-width:32px; padding:0 8px;"><span class="ms" style="font-size:15px;">${btnIcon}</span></a>`
                     : ""
               }
             </div>
@@ -1474,7 +820,7 @@ ${questionText}`;
           ${
             forumKonten
               ? `
-            <div id="${forumKontenId}" class="forum-html-preview" style="display:none; padding:10px; border-top:1px solid rgba(255,255,255,0.05); color:rgba(255,255,255,0.7); background:rgba(0,0,0,0.6);">
+            <div id="${forumKontenId}" class="forum-html-preview" style="display:none; flex-basis:100%; padding:10px; font-size:11px; line-height:1.5;">
               ${forumKonten}
             </div>`
               : ""
@@ -1482,10 +828,10 @@ ${questionText}`;
           ${
             isForum && i.id
               ? `
-            <div style="display:flex; justify-content:flex-end; padding:4px 10px 0 10px;">
-              <span class="forum-reply-count" data-forum-id="${i.id}" style="font-size:11px; opacity:0.8; font-weight:600; color:#f0872d; display:inline-flex; align-items:center; gap:3px;"><span class="ms" style="font-size:12px;">reply</span> Reply Kamu: -</span>
+            <div style="display:flex; justify-content:flex-end; flex-basis:100%; padding:4px 10px 0 10px;">
+              <span class="forum-reply-count mm-hint" data-forum-id="${i.id}" style="display:inline-flex; align-items:center; gap:3px;"><span class="ms" style="font-size:12px;">reply</span> Reply Kamu: -</span>
             </div>
-            <div class="topics-container" data-forum-id="${i.id}" data-course-code="${c.kode_course}" style="padding:0 8px 8px;"></div>`
+            <div class="topics-container mm-list" data-forum-id="${i.id}" data-course-code="${c.kode_course}" style="flex-basis:100%; padding:0 2px 8px;"></div>`
               : ""
           }
         </div>
@@ -1510,21 +856,27 @@ ${questionText}`;
           const target = document.getElementById(header.dataset.target);
           const toggle = header.querySelector(".section-toggle");
           if (target) {
-            const isVisible = target.classList.contains("active");
+            const isVisible =
+              target.classList.contains("active") ||
+              target.style.display === "flex";
             if (isVisible) {
               target.classList.remove("active");
+              target.style.display = "none";
               toggle.classList.remove("active");
             } else {
               document
                 .querySelectorAll(".section-content.active")
                 .forEach((openSection) => {
                   openSection.classList.remove("active");
+                  openSection.style.display = "none";
                   openSection
                     .closest(".section-card")
                     ?.querySelector(".section-toggle")
                     ?.classList.remove("active");
                 });
               target.classList.add("active");
+              target.style.display = "flex";
+              target.style.flexDirection = "column";
               toggle.classList.add("active");
             }
           }
@@ -1550,7 +902,7 @@ ${questionText}`;
           const sectionCode = button.dataset.sectionCode;
           const originalContent = button.innerHTML;
           button.disabled = true;
-          button.innerHTML = `<span class="ms mentari-spin" style="font-size:16px;">sync</span>`;
+          button.innerHTML = `<span class="ms" style="font-size:16px; display:inline-block; animation:mm-spin .9s linear infinite;">sync</span>`;
 
           try {
             Utils.progressToast("Sedang mengambil pertanyaan kuisioner...");
@@ -1594,7 +946,7 @@ ${questionText}`;
           const quizTitle = button.dataset.quizTitle;
           const originalContent = button.innerHTML;
           button.disabled = true;
-          button.innerHTML = `<span class="ms mentari-spin" style="font-size:16px;">sync</span>`;
+          button.innerHTML = `<span class="ms" style="font-size:16px; display:inline-block; animation:mm-spin .9s linear infinite;">sync</span>`;
 
           try {
             Utils.progressToast("Sedang memulai quiz...");
@@ -1847,19 +1199,21 @@ ${questionText}`;
       visibleGroups.forEach(
         ({ topic, root, ownReplies, studentReplyCount }) => {
           const topicEl = document.createElement("div");
+          topicEl.className = "mm-card mm-card-outline";
           topicEl.style.cssText =
-            "margin-top:8px; padding:10px 12px; border:1px solid rgba(61,153,227,0.15); border-radius:8px; font-size:11px; line-height:1.5;";
+            "margin-top:8px; padding:10px 12px; font-size:11px; line-height:1.5;";
 
           const title = document.createElement("a");
           title.href = `https://mentari.unpam.ac.id/u-courses/${courseCode}/forum/${sectionId}/topics/${topic.id}`;
-          title.className = "topic-badge";
+          title.className = "topic-badge mm-chip mm-chip-ok";
           title.style.cssText =
-            "font-weight:700; color:#3d99e3; display:flex; align-items:center; gap:6px;";
-          title.innerHTML = `<span class="ms" style="font-size:14px; flex-shrink:0;">chat</span><span style="flex:1; min-width:0;">${topic.judul || "Forum Diskusi"}</span><span class="item-status status-done" style="flex-shrink:0;"><span class="ms" style="font-size:10px;">reply</span> ${studentReplyCount}</span>`;
+            "font-weight:700; display:flex; align-items:center; gap:6px; width:100%; box-sizing:border-box; text-decoration:none;";
+          title.innerHTML = `<span class="ms" style="font-size:14px; flex-shrink:0;">chat</span><span style="flex:1; min-width:0;">${topic.judul || "Forum Diskusi"}</span><span class="item-status status-done mm-chip mm-chip-ok" style="flex-shrink:0;"><span class="ms" style="font-size:10px;">reply</span> ${studentReplyCount}</span>`;
           title.onclick = (event) => event.stopPropagation();
           topicEl.appendChild(title);
 
           const rootContent = document.createElement("div");
+          rootContent.className = "forum-html-preview";
           rootContent.style.cssText =
             "margin-top:6px; opacity:0.85; padding:4px 0;";
           rootContent.innerHTML = this.sanitizeForumHtml(
@@ -1870,8 +1224,9 @@ ${questionText}`;
 
           ownReplies.forEach((reply) => {
             const replyEl = document.createElement("div");
+            replyEl.className = "mm-card";
             replyEl.style.cssText =
-              "margin-top:6px; padding:8px 10px; border-radius:6px; background:rgba(240,135,45,0.08); border-left:3px solid #f0872d; font-size:11px;";
+              "margin-top:6px; padding:8px 10px; font-size:11px; border-left:3px solid var(--mm-primary);";
             replyEl.innerHTML = `${Number(reply.reply_level) === 2 ? "<span style='opacity:0.6; margin-right:4px;'>↳ Balasan:</span>" : ""}${this.sanitizeForumHtml(reply.konten || "")}`;
             this.appendForumFiles(replyEl, reply.files);
             topicEl.appendChild(replyEl);
@@ -1894,10 +1249,8 @@ ${questionText}`;
         link.href = `https://mentari.unpam.ac.id/api/file/${encodeURIComponent(fileId)}`;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        link.className = "token-button";
+        link.className = "mm-btn mm-btn-sm mm-btn-tonal";
         link.title = "Download lampiran";
-        link.style.cssText =
-          "padding:5px 8px; border-radius:6px; background:#3d99e3; font-size:10px;";
         link.innerHTML = `<span class="ms" style="font-size:14px;">download</span> Lampiran`;
         link.onclick = (event) => event.stopPropagation();
         filesEl.appendChild(link);
@@ -1914,36 +1267,36 @@ ${questionText}`;
 
       const targets = container._forumReplyTargets || [];
       const form = document.createElement("div");
-      form.className = "forum-reply-form";
+      form.className = "forum-reply-form mm-card mm-card-outline";
       form.style.cssText =
-        "margin-top:8px; margin-bottom:8px; padding:10px 12px; border:1px solid rgba(61,153,227,0.2); border-radius:8px; background:rgba(0,0,0,0.3); display:flex; flex-direction:column; gap:8px;";
+        "margin-top:8px; margin-bottom:8px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;";
       form.onclick = (event) => event.stopPropagation();
       form.innerHTML = `
         <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div style="font-size:11px; font-weight:700; color:#3d99e3; display:flex; align-items:center; gap:5px;">
+          <div class="mm-label" style="display:flex; align-items:center; gap:5px;">
             <span class="ms" style="font-size:14px;">edit_note</span> Tulis Balasan Forum
           </div>
-          <button type="button" class="token-button forum-reply-cancel" style="background:transparent; padding:2px; color:rgba(255,255,255,0.5);" title="Tutup">
+          <button type="button" class="mm-icon-btn forum-reply-cancel" style="width:28px; height:28px;" title="Tutup">
             <span class="ms" style="font-size:14px;">close</span>
           </button>
         </div>
-        <div style="display:flex; flex-direction:column; gap:4px; max-width:100%; position:relative;">
-          <label style="font-size:10px; opacity:0.7; font-weight:600;">Sasaran Balasan:</label>
+        <div class="mm-field" style="max-width:100%; position:relative;">
+          <label class="mm-label">Sasaran Balasan:</label>
           <input type="hidden" class="forum-reply-parent-val" value="" />
-          <button type="button" class="custom-reply-select-btn" style="width:100%; max-width:100%; box-sizing:border-box; padding:7px 10px; border:1px solid rgba(255,255,255,0.15); border-radius:6px; background:rgba(0,0,0,0.4); color:#f1f5f9; font-size:11px; text-align:left; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:6px; line-height:1.4;">
+          <button type="button" class="custom-reply-select-btn mm-select" style="text-align:left; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:11px;">
             <span class="custom-reply-select-label" style="flex:1; min-width:0; white-space:normal; word-break:break-word; overflow-wrap:anywhere;">Pilih sasaran balasan...</span>
             <span class="ms" style="font-size:14px; opacity:0.6; flex-shrink:0;">expand_more</span>
           </button>
-          <div class="custom-reply-options-list" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px; max-height:180px; overflow-y:auto; background:#1e293b; border:1px solid rgba(61,153,227,0.3); border-radius:6px; z-index:100; box-shadow:0 6px 20px rgba(0,0,0,0.5); box-sizing:border-box;">
+          <div class="custom-reply-options-list mm-card mm-card-elev mm-scroll" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px; max-height:180px; overflow-y:auto; z-index:100; box-sizing:border-box;">
           </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:4px;">
-          <label style="font-size:10px; opacity:0.7; font-weight:600;">Isi Pesan Balasan:</label>
-          <textarea class="forum-reply-input" rows="3" placeholder="Tuliskan argumen / jawaban forum kamu secara lengkap..." style="width:100%; box-sizing:border-box; resize:vertical; padding:8px; border:1px solid rgba(255,255,255,0.12); border-radius:6px; background:rgba(0,0,0,0.4); color:#f1f5f9; font-family:inherit; font-size:11px; min-height:65px; outline:none;"></textarea>
+        <div class="mm-field">
+          <label class="mm-label">Isi Pesan Balasan:</label>
+          <textarea class="forum-reply-input mm-textarea" rows="3" placeholder="Tuliskan argumen / jawaban forum kamu secara lengkap..." style="font-size:11px; min-height:65px;"></textarea>
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:2px;">
-          <button type="button" class="token-button forum-reply-cancel-btn" style="padding:4px 10px; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.7); border-radius:6px; font-size:11px; font-weight:600;">Batal</button>
-          <button type="button" class="token-button forum-reply-send" style="padding:4px 14px; background:#3d99e3; color:#fff; border-radius:6px; font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+          <button type="button" class="mm-btn mm-btn-sm mm-btn-text forum-reply-cancel-btn">Batal</button>
+          <button type="button" class="mm-btn mm-btn-sm forum-reply-send">
             <span class="ms" style="font-size:13px;">send</span> Kirim Balasan
           </button>
         </div>
@@ -1970,12 +1323,10 @@ ${questionText}`;
 
       targets.forEach((target) => {
         const item = document.createElement("div");
+        item.className = "mm-list-item";
         item.style.cssText =
-          "padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.06); font-size:11px; line-height:1.4; white-space:normal; word-break:break-word; overflow-wrap:anywhere; cursor:pointer; color:#f1f5f9; transition:background 0.15s; box-sizing:border-box;";
+          "font-size:11px; line-height:1.4; white-space:normal; word-break:break-word; overflow-wrap:anywhere; cursor:pointer; box-sizing:border-box;";
         item.textContent = target.label;
-        item.onmouseenter = () =>
-          (item.style.background = "rgba(61,153,227,0.25)");
-        item.onmouseleave = () => (item.style.background = "transparent");
         item.onclick = (e) => {
           e.stopPropagation();
           selectOption(target.id, target.label);
@@ -1991,19 +1342,12 @@ ${questionText}`;
           .filter((reply) => Number(reply.reply_level) === 1)
           .forEach((reply) => {
             const replyItem = document.createElement("div");
+            replyItem.className = "mm-list-item";
             replyItem.style.cssText =
-              "padding:8px 10px 8px 20px; border-bottom:1px solid rgba(255,255,255,0.06); font-size:11px; line-height:1.4; white-space:normal; word-break:break-word; overflow-wrap:anywhere; cursor:pointer; color:#94a3b8; transition:background 0.15s; box-sizing:border-box;";
+              "padding-left:20px; font-size:11px; line-height:1.4; white-space:normal; word-break:break-word; overflow-wrap:anywhere; cursor:pointer; box-sizing:border-box;";
             const cleanedText = this.cleanForumText(reply.konten);
             const fullText = `↳ Reply kamu: ${cleanedText}`;
             replyItem.textContent = fullText;
-            replyItem.onmouseenter = () => {
-              replyItem.style.background = "rgba(61,153,227,0.25)";
-              replyItem.style.color = "#f1f5f9";
-            };
-            replyItem.onmouseleave = () => {
-              replyItem.style.background = "transparent";
-              replyItem.style.color = "#94a3b8";
-            };
             replyItem.onclick = (e) => {
               e.stopPropagation();
               selectOption(reply.id, fullText);
@@ -2037,7 +1381,7 @@ ${questionText}`;
         }
 
         sendButton.disabled = true;
-        sendButton.innerHTML = `<span class="ms mentari-spin">sync</span>`;
+        sendButton.innerHTML = `<span class="ms" style="display:inline-block; animation:mm-spin .9s linear infinite;">sync</span>`;
         try {
           await ApiService.submitForumReply({
             id_topic: parentTarget.topicId,
@@ -2136,9 +1480,9 @@ ${questionText}`;
       });
       if (!all.length) {
         el.innerHTML = `
-          <div class="empty-state">
-            <span class="ms" style="font-size:36px; display:block; margin-bottom:10px;">groups</span>
-            <div style="font-size:12px;">Tidak ada data mahasiswa</div>
+          <div class="empty-state mm-empty">
+            <div class="empty-icon mm-empty-ic"><span class="ms">groups</span></div>
+            <p class="empty-desc">Tidak ada data mahasiswa</p>
           </div>`;
         return;
       }
@@ -2154,30 +1498,30 @@ ${questionText}`;
               ? p.no_hp_mahasiswa
               : null;
           return `
-          <div class="student-row">
-            <div class="student-avatar">${initial}</div>
-            <div class="student-info">
-              <div class="student-name">${p.nama_mahasiswa}</div>
-              <div class="student-meta">
+          <div class="student-row mm-list-item">
+            <div class="student-avatar mm-lead">${initial}</div>
+            <div class="student-info mm-list-main">
+              <div class="student-name mm-list-title">${p.nama_mahasiswa}</div>
+              <div class="student-meta mm-list-sub">
                 <span class="student-nim">${p.nim}</span>
                 ${email ? `<span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;" title="${email}">${email}</span>` : ""}
                 ${hp ? `<span>${hp}</span>` : ""}
               </div>
             </div>
-            <span class="student-rank">${i + 1}</span>
+            <span class="student-rank mm-chip">${i + 1}</span>
           </div>`;
         })
         .join("");
 
       el.innerHTML = `
-        <div class="student-list-card">
-          <div class="student-list-header">
-            <div class="student-list-title"><span class="ms">groups</span> Daftar Mahasiswa <span class="student-count">${all.length}</span></div>
-          <button id="copy-mhs" class="token-button" style="padding:5px 10px; height:28px; font-size:10px; gap:4px; border-radius:6px;">
+        <div class="student-list-card mm-card mm-card-outline">
+          <div class="student-list-header mm-card-head">
+            <div class="student-list-title mm-title" style="font-size:13px;"><span class="ms">groups</span> Daftar Mahasiswa <span class="student-count mm-chip mm-chip-ok">${all.length}</span></div>
+          <button id="copy-mhs" class="mm-btn mm-btn-sm mm-btn-tonal">
             <span class="ms" style="font-size:14px;">content_copy</span> Salin
           </button>
           </div>
-          <div class="student-model-list">${rows}</div>
+          <div class="student-model-list mm-list mm-scroll" style="max-height:580px; overflow-y:auto;">${rows}</div>
         </div>`;
 
       document.getElementById("copy-mhs").onclick = (e) => {
@@ -2196,85 +1540,102 @@ ${questionText}`;
         Utils.get(Config.STORAGE_KEYS.GEMINI_MODEL) || "gemini-2.5-flash-lite";
 
       el.innerHTML = `
-        <div class="settings-profile">
-          <div class="settings-avatar">${info.fullname.charAt(0)}</div>
-          <div class="settings-profile-info">
-            <div class="settings-label">${info.fullname}</div>
-            <div class="settings-desc">${info.username} &bull; ${info.role}</div>
+        <div class="settings-profile mm-card mm-card-outline" style="display:flex; align-items:center; gap:12px; padding:11px 12px; margin-bottom:12px;">
+          <div class="settings-avatar mm-lead" style="width:38px; height:38px;">${info.fullname.charAt(0)}</div>
+          <div class="settings-profile-info mm-list-main">
+            <div class="settings-label mm-title" style="font-size:13px;">${info.fullname}</div>
+            <div class="settings-desc mm-list-sub">${info.username} &bull; ${info.role}</div>
           </div>
         </div>
 
-        <div class="settings-quick-links">
-          <a href="https://aistudio.google.com/app/api-keys" target="_blank" class="token-button btn-outline" style="height:32px; font-size:11px; gap:5px; border-radius:7px; box-shadow:none; text-decoration:none;">
-            <span class="ms" style="font-size:16px; color:#f0872d;">vpn_key</span> Ambil API Key
+        <div class="settings-quick-links" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px;">
+          <a href="https://aistudio.google.com/app/api-keys" target="_blank" class="mm-btn mm-btn-sm mm-btn-outline" style="text-decoration:none;">
+            <span class="ms" style="font-size:16px;">vpn_key</span> Ambil API Key
           </a>
-          <a href="https://aistudio.google.com/app/rate-limit" target="_blank" class="token-button btn-outline" style="height:32px; font-size:11px; gap:5px; border-radius:7px; box-shadow:none; text-decoration:none;">
-            <span class="ms" style="font-size:16px; color:#f0872d;">speed</span> Rate Limit
+          <a href="https://aistudio.google.com/app/rate-limit" target="_blank" class="mm-btn mm-btn-sm mm-btn-outline" style="text-decoration:none;">
+            <span class="ms" style="font-size:16px;">speed</span> Rate Limit
           </a>
         </div>
 
-        <div class="settings-section">
-          <div class="settings-section-header"><span class="settings-section-title"><span class="ms">timer</span> Auto Finish Quiz</span></div>
-          <div class="settings-row" style="flex-direction:column; align-items:flex-start; gap:8px; padding:12px;">
+        <div class="settings-section mm-card mm-card-outline" style="margin-bottom:12px;">
+          <div class="settings-section-header mm-card-head"><span class="settings-section-title mm-title" style="font-size:13px; display:flex; align-items:center; gap:7px;"><span class="ms">timer</span> Auto Finish Quiz</span></div>
+          <div class="settings-row mm-card-body" style="display:flex; flex-direction:column; align-items:stretch; gap:8px;">
             <div class="settings-row-main" style="width:100%;">
-              <div class="settings-row-title"><span class="ms">hourglass_top</span> Waktu Penyelesaian Quiz (Menit)</div>
-              <div class="settings-row-desc" style="margin-left:0; margin-top:4px; line-height:1.4;">
+              <div class="settings-row-title mm-label"><span class="ms">hourglass_top</span> Waktu Penyelesaian Quiz (Menit)</div>
+              <div class="settings-row-desc mm-hint" style="margin-top:4px; line-height:1.4;">
                 Durasi Pengerjaan Quiz, Contoh: <strong>3.21</strong> (3 mnt 21 dtk), atau <strong>0</strong> untuk langsung selesai.
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px; width:100%; margin-top:4px;">
-              <input type="text" id="set-quiz-delay" placeholder="0 (Default)" value="${Utils.get(Config.STORAGE_KEYS.QUIZ_DELAY) || "0"}"
-                style="flex:1; height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#ffffff; font-weight:600; font-size:12px; font-family:monospace; outline:none;" />
-              <button id="save-quiz-delay" class="token-button" style="height:32px; padding:0 12px; font-size:11px; border-radius:6px; flex-shrink:0;">Simpan</button>
+              <input type="text" id="set-quiz-delay" class="mm-input" placeholder="0 (Default)" value="${Utils.get(Config.STORAGE_KEYS.QUIZ_DELAY) || "0"}"
+                style="flex:1; font-family:monospace;" />
+              <button id="save-quiz-delay" class="mm-btn mm-btn-sm" style="flex-shrink:0;">Simpan</button>
             </div>
           </div>
         </div>
 
-        <div class="settings-section">
-          <div class="settings-section-header"><span class="settings-section-title"><span class="ms">hub</span> AI Provider (OMP / Gemini)</span></div>
-          <div style="padding:12px; display:flex; flex-direction:column; gap:8px;">
-            <label class="settings-section-label" for="ai-provider">Provider</label>
-            <select id="ai-provider" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; outline:none;">
+        <div class="settings-section mm-card mm-card-outline" style="margin-bottom:12px;">
+          <div class="settings-section-header mm-card-head"><span class="settings-section-title mm-title" style="font-size:13px; display:flex; align-items:center; gap:7px;"><span class="ms">hub</span> AI Provider (OMP / Gemini)</span></div>
+          <div class="mm-card-body mm-field">
+            <label class="settings-section-label mm-label" for="ai-provider">Provider</label>
+            <select id="ai-provider" class="mm-select">
               <option value="omp">OMP (muse-spark via gateway)</option>
               <option value="gemini">Gemini (API key)</option>
             </select>
-            <input id="omp-endpoint" placeholder="http://127.0.0.1:4000/v1" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; font-family:monospace; outline:none;" />
-            <input id="omp-token" type="password" placeholder="Gateway token (~/.omp/auth-gateway.token, kosong bila --no-auth)" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; font-family:monospace; outline:none;" />
-            <input id="omp-model" placeholder="opencode-zen/muse-spark-1.3-contributor-free" style="height:32px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.3); border-radius:6px; padding:0 10px; color:#fff; font-size:12px; font-family:monospace; outline:none;" />
+            <input id="omp-endpoint" class="mm-input" placeholder="http://127.0.0.1:4000/v1" style="font-family:monospace;" />
+            <input id="omp-token" class="mm-input" type="password" placeholder="Gateway token (~/.omp/auth-gateway.token, kosong bila --no-auth)" style="font-family:monospace;" />
+            <input id="omp-model" class="mm-input" placeholder="opencode-zen/muse-spark-1.3-contributor-free" style="font-family:monospace;" />
             <div style="display:flex; gap:8px; align-items:center;">
-              <button id="check-omp-btn" class="token-button" style="height:32px; padding:0 12px; font-size:11px; border-radius:6px; flex-shrink:0;">Cek Gateway</button>
-              <span id="omp-status" style="font-size:11px; opacity:0.7;">-</span>
+              <button id="check-omp-btn" class="mm-btn mm-btn-sm mm-btn-tonal" style="flex-shrink:0;">Cek Gateway</button>
+              <span id="omp-status" class="mm-hint">-</span>
             </div>
-            <p class="settings-desc" style="margin:0;">Jalankan <code>omp auth-gateway serve</code> agar provider OMP aktif.</p>
+            <p class="settings-desc mm-hint" style="margin:0;">Jalankan <code>omp auth-gateway serve</code> agar provider OMP aktif.</p>
           </div>
         </div>
 
-        <div class="settings-section">
-          <div class="settings-section-header">
-            <span class="settings-section-title"><span class="ms">auto_awesome</span> Model Gemini</span>
-            <span id="set-model-status" style="font-size:9px; opacity:0.55;">Memuat model...</span>
+        <div class="settings-section mm-card mm-card-outline" style="margin-bottom:12px;">
+          <div class="settings-section-header mm-card-head">
+            <span class="settings-section-title mm-title" style="font-size:13px; display:flex; align-items:center; gap:7px;"><span class="ms">palette</span> Tema Warna</span>
           </div>
-          <div id="set-model-list" class="settings-model-list">
+          <div class="mm-card-body mm-field">
+            <label class="settings-section-label mm-label" for="mm-theme-select">Preset warna popup + pet stage</label>
+            <select id="mm-theme-select" class="mm-select">
+              <option value="sunset">Sunset (Bawaan)</option>
+              <option value="rimba">Rimba · Teal</option>
+              <option value="anggrek">Anggrek · Ungu</option>
+              <option value="senja">Senja · Olive</option>
+              <option value="samudra">Samudra · Biru</option>
+              <option value="bata">Bata · Terakota</option>
+            </select>
+            <p class="settings-desc mm-hint" style="margin:0;">Mewarnai ulang popup ini, quiz helper, presensi, survei, dan dialog API key.</p>
+          </div>
+        </div>
+
+        <div class="settings-section mm-card mm-card-outline" style="margin-bottom:12px;">
+          <div class="settings-section-header mm-card-head">
+            <span class="settings-section-title mm-title" style="font-size:13px; display:flex; align-items:center; gap:7px;"><span class="ms">auto_awesome</span> Model Gemini</span>
+            <span id="set-model-status" class="mm-hint">Memuat model...</span>
+          </div>
+          <div id="set-model-list" class="settings-model-list mm-list mm-scroll" style="max-height:200px; overflow-y:auto;">
               <div style="text-align:center; padding:18px; opacity:0.4; font-size:11px;">Memuat daftar model...</div>
           </div>
         </div>
 
-        <button id="set-api-btn" class="token-button" style="width:100%; background:#f0872d; color:#fff; font-weight:700; border-radius:8px; height:34px; margin-bottom:10px; gap:8px; box-shadow:none; border-color:transparent;">
+        <button id="set-api-btn" class="mm-btn" style="width:100%; margin-bottom:10px;">
           <span class="ms" style="font-size:16px;">vpn_key</span> Update API Key
         </button>
-
-        <div class="settings-disclaimer">
+        <div class="settings-disclaimer mm-card" style="padding:8px 10px; margin-bottom:12px; border-left:3px solid var(--mm-primary);">
           <div style="display:flex; align-items:center; gap:5px; margin-bottom:3px;">
-            <span class="ms" style="font-size:13px; color:#f0872d;">warning</span>
-            <span style="font-size:10px; font-weight:700; color:#f0872d; text-transform:uppercase; letter-spacing:0.4px;">Peringatan</span>
+            <span class="ms" style="font-size:13px;">warning</span>
+            <span class="mm-eyebrow" style="font-size:10px;">Peringatan</span>
           </div>
-          <p class="settings-desc" style="font-size:10px; opacity:0.6; line-height:1.5; margin:0;">Jawaban AI tidak selalu 100% akurat. Ganti model jika terjadi error. Selalu verifikasi jawaban secara mandiri.</p>
+          <p class="settings-desc mm-hint" style="line-height:1.5; margin:0;">Jawaban AI tidak selalu 100% akurat. Ganti model jika terjadi error. Selalu verifikasi jawaban secara mandiri.</p>
         </div>
 
         <!-- Footer -->
-        <div class="settings-footer" style="display:flex; justify-content:space-between; align-items:center; opacity:0.5; font-size:10px;">
-          <span>v${APP_VERSION} &bull; by <a href="https://github.com/Lukman754" style="color:#f0872d; text-decoration:none;" target="_blank">Lukman754</a></span>
-          <button id="set-update-btn" style="background:none; border:none; color:inherit; font-size:inherit; cursor:pointer; text-decoration:underline; padding:0;">Cek Update</button>
+        <div class="settings-footer mm-hint" style="display:flex; justify-content:space-between; align-items:center; font-size:10px;">
+          <span>v${APP_VERSION} &bull; by <a href="https://github.com/Lukman754" style="color:inherit;" target="_blank">Lukman754</a></span>
+          <button id="set-update-btn" class="mm-btn mm-btn-sm mm-btn-text" style="font-size:inherit;">Cek Update</button>
         </div>
       `;
 
@@ -2286,6 +1647,15 @@ ${questionText}`;
         );
       };
 
+      // M3 color theme preset
+      const themeSel = document.getElementById("mm-theme-select");
+      if (themeSel && window.MentariM3) {
+        themeSel.value = window.MentariM3.getTheme();
+        themeSel.onchange = function () {
+          window.MentariM3.setTheme(this.value);
+          Utils.toast("Tema warna: " + this.options[this.selectedIndex].text);
+        };
+      }
       document.getElementById("set-api-btn").onclick = (e) => {
         e.stopPropagation();
         window.dispatchEvent(new CustomEvent("mentari-update-api-key"));
@@ -2408,17 +1778,16 @@ ${questionText}`;
           const isLimited = modelStats.limited === true;
 
           return `
-          <div class="mentari-model-item ${isActive ? "is-active" : ""} ${isLimited ? "is-limited" : ""}" data-model="${modelId}">
-            <div class="model-state-dot"></div>
-            <div style="flex:1; min-width:0;">
-              <div class="model-title" style="font-size:12px; font-weight:${isActive ? "700" : "500"};
-                          white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          <div class="mentari-model-item mm-list-item ${isActive ? "is-active mm-chip-ok" : ""} ${isLimited ? "is-limited" : ""}" data-model="${modelId}">
+            <div class="model-state-dot" style="width:8px; height:8px; border-radius:50%; flex-shrink:0; background:${isActive ? "var(--mm-primary)" : isLimited ? "var(--mm-error)" : "var(--mm-outline)"};"></div>
+            <div class="mm-list-main">
+              <div class="model-title mm-list-title">
                 ${m.displayName}
-                ${isLimited ? "<span class='model-limit-badge'>LIMIT</span>" : ""}
+                ${isLimited ? "<span class='model-limit-badge mm-chip mm-chip-err' style='margin-left:6px;'>LIMIT</span>" : ""}
               </div>
-              <div class="model-id-sub" style="font-size:10px; opacity:0.55; margin-top:1px;">models/${modelId}</div>
+              <div class="model-id-sub mm-list-sub">models/${modelId}</div>
             </div>
-            ${isActive ? `<span class="ms" style="color:#3d99e3; font-size:16px; flex-shrink:0;">check_circle</span>` : ""}
+            ${isActive ? `<span class="ms" style="font-size:16px; flex-shrink:0;">check_circle</span>` : ""}
           </div>
         `;
         })
@@ -2610,6 +1979,8 @@ ${questionText}`;
         const section = document.getElementById(id);
         if (!section) return;
         section.classList.add("active");
+        section.style.display = "flex";
+        section.style.flexDirection = "column";
         section
           .closest(".section-card")
           ?.querySelector(".section-toggle")
@@ -2653,19 +2024,27 @@ ${questionText}`;
       p = document.getElementById("token-runner-popup");
     }
     if (!p) return;
-
+    if (window.MentariM3) window.MentariM3.applyTheme(p);
     if (!p.classList.contains("active")) {
       UIRenderer.updatePosition();
       p.classList.add("active");
+      p.style.visibility = "visible";
+      p.style.opacity = "1";
+      p.style.transform = "translateY(0) scale(1)";
+      p.style.pointerEvents = "auto";
       const close = (e) => {
         if (
           !p.contains(e.target) &&
           !document
             .getElementById("mentari-header-toggle")
             ?.contains(e.target) &&
-          !e.target.closest(".toast")
+          !e.target.closest(".mm-snackbar")
         ) {
           p.classList.remove("active");
+          p.style.visibility = "hidden";
+          p.style.opacity = "0";
+          p.style.transform = "translateY(-15px) scale(0.95)";
+          p.style.pointerEvents = "none";
           document.removeEventListener("mousedown", close);
         }
       };
@@ -2674,6 +2053,10 @@ ${questionText}`;
       }, 50);
     } else {
       p.classList.remove("active");
+      p.style.visibility = "hidden";
+      p.style.opacity = "0";
+      p.style.transform = "translateY(-15px) scale(0.95)";
+      p.style.pointerEvents = "none";
     }
   };
 

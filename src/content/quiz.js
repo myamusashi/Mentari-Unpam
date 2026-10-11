@@ -62,16 +62,7 @@ Penting:
       const stored = localStorage.getItem("geminiApiKey");
       if (stored) return atob(stored);
 
-      const errorEl = document.createElement("div");
-      errorEl.style =
-        "position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#f44336;color:white;padding:12px 20px;border-radius:6px;box-shadow:0 3px 15px rgba(0,0,0,0.3);z-index:10000;font-family:system-ui;";
-      errorEl.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span>❌</span><span>API Key tidak ditemukan. Pastikan Anda telah mengatur API Key di Settings.</span></div>`;
-      document.body.appendChild(errorEl);
-      setTimeout(() => {
-        errorEl.style.opacity = "0";
-        errorEl.style.transition = "opacity 0.5s";
-        setTimeout(() => errorEl.remove(), 500);
-      }, 5000);
+      if (window.MentariM3) window.MentariM3.snackbar("API Key tidak ditemukan. Pastikan Anda telah mengatur API Key di Settings.");
       throw new Error("Gemini API Key not found in localStorage");
     },
 
@@ -135,16 +126,7 @@ Penting:
     },
 
     showError(message) {
-      const el = document.createElement("div");
-      el.style =
-        "position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:8px 16px;border-radius:50px;box-shadow:0 5px 15px rgba(0,0,0,0.4);z-index:10000;font-family:system-ui;border:1px solid #444;font-size:11px;animation:toastIn 0.3s;";
-      el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span style="color:#f44336;">❌</span><span>${message}</span></div>`;
-      document.body.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = "0";
-        el.style.transition = "opacity 0.5s";
-        setTimeout(() => el.remove(), 500);
-      }, 5000);
+      if (window.MentariM3) window.MentariM3.snackbar(String(message));
     },
 
     updateQuota(headers) {
@@ -343,38 +325,27 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
     content: null,
 
     createPopup() {
+      if (window.MentariM3) window.MentariM3.ensure();
       const popup = document.createElement("div");
+      popup.className = "mm mm-popup";
       popup.style =
-        "position:fixed;z-index:10000;min-width:300px;max-width:450px;width:auto;top:20px;right:20px;background:#1e1e1e;color:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.5);font-family:system-ui;font-size:13px;border:1px solid #333;overflow:hidden;";
+        "position:fixed;z-index:10000;min-width:300px;max-width:450px;width:auto;top:20px;right:20px;font-size:13px;";
 
       const header = document.createElement("div");
-      header.style =
-        "padding:10px 14px;background:#2a2a2a;color:#fff;cursor:move;user-select:none;display:flex;justify-content:space-between;align-items:center;font-weight:500;border-bottom:1px solid #333;";
+      header.className = "mm-topbar";
+      header.style = "cursor:move;user-select:none;justify-content:space-between;";
       header.innerHTML = `
-        <div>Quiz Helper</div>
-        <div style="display:flex;gap:8px;">
-          <button id="toggle-popup" style="background:none;border:none;color:#999;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:color 0.2s;">−</button>
-          <button id="close-popup" style="background:none;border:none;color:#999;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:color 0.2s;">×</button>
+        <div class="mm-title">Quiz Helper</div>
+        <div style="display:flex;gap:4px;">
+          <button id="toggle-popup" class="mm-icon-btn" style="width:32px;height:32px;">−</button>
+          <button id="close-popup" class="mm-icon-btn" style="width:32px;height:32px;">×</button>
         </div>
       `;
 
       const content = document.createElement("div");
       content.id = "popup-content";
+      content.className = "mm-scroll";
       content.style = "padding:12px;max-height:500px;overflow-y:auto;";
-
-      // Hover & scrollbar styles
-      const style = document.createElement("style");
-      style.textContent = `
-        #toggle-popup:hover, #close-popup:hover { color: #fff !important; }
-        .q-tooltip { background: #1e1e1e !important; border-color: #444 !important; }
-        ::-webkit-scrollbar { width: 2px; height: 2px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(76,175,80,0.2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(76,175,80,0.5); }
-        .mode-btn { padding: 4px 8px; border-radius: 4px; border: 1px solid #444; background: #2a2a2a; color: #888; font-size: 10px; cursor: pointer; transition: all 0.2s; }
-        .mode-btn.active { background: rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50; font-weight: bold; }
-      `;
-      document.head.appendChild(style);
 
       popup.appendChild(header);
       popup.appendChild(content);
@@ -421,63 +392,53 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
     showLoading(content) {
       content.innerHTML = `
         <div style="text-align:center;padding:20px;">
-          <div style="width:60px;height:60px;margin:0 auto 15px;background:#2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #333;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v8M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h8M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-            </svg>
-          </div>
-          <div style="font-size:16px;font-weight:500;color:#4CAF50;margin-bottom:8px;">Memuat Quiz</div>
-          <div style="color:#999;font-size:13px;">Mohon tunggu sebentar...</div>
-          <div style="width:100%;height:4px;background:#2a2a2a;border-radius:2px;overflow:hidden;margin-top:12px;position:relative;">
-            <div style="position:absolute;top:0;left:0;width:30%;height:100%;background:#4CAF50;animation:quiz-pulse 1.5s ease-in-out infinite;"></div>
-          </div>
-          <style>@keyframes quiz-pulse { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }</style>
+          <div class="mm-spin-ring" style="margin-bottom:15px;"></div>
+          <div class="mm-title" style="margin-bottom:8px;">Memuat Quiz</div>
+          <div class="mm-subtitle">Mohon tunggu sebentar...</div>
+          <div class="mm-linear mm-linear-ind" style="margin-top:12px;"><i></i></div>
         </div>`;
     },
 
     showScanning(content) {
       content.innerHTML = `
         <div style="text-align:center;padding:20px;">
-          <div style="font-size:16px;font-weight:500;color:#4CAF50;margin-bottom:8px;">Memeriksa Quiz...</div>
-          <div style="color:#999;font-size:13px;">Mencari tombol "Mulai Quiz"</div>
-          <div style="width:100%;height:4px;background:#2a2a2a;border-radius:2px;overflow:hidden;margin-top:12px;position:relative;">
-            <div style="position:absolute;top:0;left:0;width:30%;height:100%;background:#4CAF50;animation:quiz-pulse 0.8s ease-in-out infinite;"></div>
-          </div>
+          <div class="mm-title" style="margin-bottom:8px;">Memeriksa Quiz...</div>
+          <div class="mm-subtitle">Mencari tombol "Mulai Quiz"</div>
+          <div class="mm-linear mm-linear-ind" style="margin-top:12px;"><i></i></div>
         </div>`;
     },
 
     initAnswerContainer(content) {
       content.innerHTML = `
         <div style="margin-bottom:10px;">
-          <div id="progress-text" style="font-size:12px;margin-bottom:6px;color:#999;font-weight:500;">Mencari jawaban...</div>
-          <div style="width:100%;height:4px;background-color:#2a2a2a;border-radius:2px;overflow:hidden;">
-            <div id="progress-bar" style="height:100%;width:0%;background-color:#4CAF50;transition:width 0.2s ease;"></div>
-          </div>
+          <div id="progress-text" class="mm-subtitle" style="margin-bottom:6px;font-weight:500;">Mencari jawaban...</div>
+          <div class="mm-linear"><i id="progress-bar" style="width:0%;"></i></div>
         </div>
 
         <!-- Disclaimer -->
-        <div style="background:rgba(240,173,78,0.08);border:1px solid rgba(240,173,78,0.25);border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:#f0ad4e;line-height:1.5;">
-          ⚠️ <strong>Catatan:</strong> Jawaban AI bisa saja kurang tepat. Gunakan sebagai referensi, bukan patokan utama — tetap baca soal dan cek jawabannya sendiri ya!
+        <div class="mm-card-outline" style="padding:8px 10px;margin-bottom:10px;font-size:11px;line-height:1.5;">
+          <span class="mm-chip mm-chip-warn" style="margin-bottom:6px;">⚠️ Catatan</span>
+          <div>Jawaban AI bisa saja kurang tepat. Gunakan sebagai referensi, bukan patokan utama — tetap baca soal dan cek jawabannya sendiri ya!</div>
         </div>
 
         <!-- Tombol Copy All -->
         <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <button id="copy-all-questions" style="flex:1;padding:7px;background:#2a2a2a;border:1px solid #444;border-radius:6px;color:#ccc;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background 0.2s;">
+          <button id="copy-all-questions" class="mm-btn mm-btn-sm mm-btn-tonal" style="flex:1;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
             Salin
           </button>
-          
-          <div style="display:flex;gap:2px;background:#2a2a2a;padding:2px;border-radius:6px;border:1px solid #444;">
-            <button class="mode-btn ${App.viewMode === 1 ? "active" : ""}" data-mode="1" title="Mode Ringkas">R</button>
-            <button class="mode-btn ${App.viewMode === 2 ? "active" : ""}" data-mode="2" title="Mode Standar">S</button>
-            <button class="mode-btn ${App.viewMode === 3 ? "active" : ""}" data-mode="3" title="Mode Detail">D</button>
+
+          <div class="mm-seg">
+            <button class="mode-btn ${App.viewMode === 1 ? "active mm-seg-on" : ""}" data-mode="1" title="Mode Ringkas">R</button>
+            <button class="mode-btn ${App.viewMode === 2 ? "active mm-seg-on" : ""}" data-mode="2" title="Mode Standar">S</button>
+            <button class="mode-btn ${App.viewMode === 3 ? "active mm-seg-on" : ""}" data-mode="3" title="Mode Detail">D</button>
           </div>
         </div>
 
-        <div id="answers-container" style="max-height:420px;overflow-y:auto;padding-right:4px;"></div>
+        <div id="answers-container" class="mm-scroll" style="max-height:420px;overflow-y:auto;padding-right:4px;"></div>
         <div style="display:none;justify-content:space-between;margin-top:10px;">
-          <label style="display:flex;align-items:center;font-size:12px;color:#999;"><input type="checkbox" id="auto-answer" checked style="margin-right:5px;"> Auto-jawab</label>
-          <label style="display:flex;align-items:center;font-size:12px;color:#999;"><input type="checkbox" id="auto-next" checked style="margin-right:5px;"> Auto-next</label>
+          <label style="display:flex;align-items:center;font-size:12px;"><input type="checkbox" id="auto-answer" checked style="margin-right:5px;"> Auto-jawab</label>
+          <label style="display:flex;align-items:center;font-size:12px;"><input type="checkbox" id="auto-next" checked style="margin-right:5px;"> Auto-next</label>
         </div>`;
 
       // Event Copy All
@@ -495,8 +456,8 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
           // Toggle active class
           content
             .querySelectorAll(".mode-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
+            .forEach((b) => b.classList.remove("active", "mm-seg-on"));
+          btn.classList.add("active", "mm-seg-on");
 
           // Re-render all questions
           App.renderAllQuestions();
@@ -507,9 +468,10 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
     createQuestionItem(index, questionId, statusHtml) {
       const el = document.createElement("div");
       el.dataset.questionId = questionId;
+      el.className = "mm-card-outline";
       el.style =
-        "padding:8px 12px;margin-bottom:8px;border-radius:6px;background-color:#2a2a2a;position:relative;border-left:3px solid #333;transition:all 0.2s ease;";
-      el.innerHTML = `<small>${index + 1}. <span style="color:#ffcc5c;">${statusHtml}</span></small>`;
+        "padding:8px 12px;margin-bottom:8px;position:relative;border-left:3px solid var(--mm-outline-variant);";
+      el.innerHTML = `<small>${index + 1}. <span>${statusHtml}</span></small>`;
       return el;
     },
 
@@ -521,7 +483,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
         const answerIndex = answer.charCodeAt(0) - 97;
         const answerText = options[answerIndex] || "";
 
-        element.style.borderLeftColor = "#4CAF50";
+        element.style.borderLeftColor = "var(--mm-primary)";
         element.style.padding = viewMode === 1 ? "6px 12px" : "10px 12px";
 
         let html = "";
@@ -531,36 +493,36 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
           html = `
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
               <div style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">
-                <span style="color:#888;margin-right:4px;">${number}.</span>
-                <span style="background:#4CAF50;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:6px;">${answer.toUpperCase()}</span>
-                <span style="color:#ddd;">${answerText}</span>
+                <span style="margin-right:4px;">${number}.</span>
+                <span class="mm-chip mm-chip-ok" style="height:22px;font-size:10px;padding:0 8px;margin-right:6px;">${answer.toUpperCase()}</span>
+                <span>${answerText}</span>
               </div>
-              <button class="apply-answer" data-index="${index}" data-letter="${answer}" style="padding:2px 8px;background:#4CAF50;border:none;border-radius:4px;color:white;font-size:9px;cursor:pointer;">Set</button>
+              <button class="apply-answer mm-btn mm-btn-sm" data-index="${index}" data-letter="${answer}">Set</button>
             </div>`;
         } else {
           // MODE 2 & 3: Standar / Detail
           html = `
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
-              <div style="flex:1;">
-                <span style="font-size:11px;color:#4CAF50;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Soal ${number}</span>
-                <span style="margin-left:8px;background:#4CAF50;color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;">${answer.toUpperCase()}</span>
+              <div style="flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span class="mm-eyebrow">Soal ${number}</span>
+                <span class="mm-chip mm-chip-ok">${answer.toUpperCase()}</span>
               </div>
-              <div style="display:flex;gap:5px;flex-shrink:0;">
-                <button class="apply-answer" data-index="${index}" data-letter="${answer}" title="Pilih jawaban ini" style="padding:3px 8px;background:#4CAF50;border:none;border-radius:4px;color:white;font-size:10px;cursor:pointer;">Pilih</button>
-                <div class="info-button" title="Lihat penjelasan AI" style="width:22px;height:22px;border-radius:50%;background:#333;color:#aaa;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;font-weight:700;transition:all 0.2s;">i</div>
+              <div style="display:flex;gap:5px;flex-shrink:0;align-items:center;">
+                <button class="apply-answer mm-btn mm-btn-sm" data-index="${index}" data-letter="${answer}" title="Pilih jawaban ini">Pilih</button>
+                <button class="info-button mm-btn-text mm-btn mm-btn-sm" title="Lihat penjelasan AI" style="min-width:32px;padding:0 8px;">i</button>
               </div>
             </div>
 
-            <div style="font-size:12px;color:#ddd;line-height:1.5;margin-bottom:8px;white-space:pre-wrap;word-break:break-word;">${question.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+            <div class="mm-subtitle" style="line-height:1.5;margin-bottom:8px;white-space:pre-wrap;word-break:break-word;font-size:12px;">${question.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
 
             <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:${viewMode === 3 ? "10px" : "0"};">
               ${options
                 .map((opt, idx) => {
                   const letter = String.fromCharCode(97 + idx);
                   const isAnswer = letter === answer;
-                  return `<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 7px;border-radius:5px;font-size:11px;background:${isAnswer ? "rgba(76,175,80,0.12)" : "rgba(255,255,255,0.03)"};border:1px solid ${isAnswer ? "rgba(76,175,80,0.3)" : "rgba(255,255,255,0.05)"};">
-                  <span style="font-weight:700;color:${isAnswer ? "#4CAF50" : "#777"};flex-shrink:0;min-width:14px;">${letter}.</span>
-                  <span style="color:${isAnswer ? "#c8f0c9" : "#aaa"};line-height:1.4;">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span>
+                  return `<div class="mm-chip ${isAnswer ? "mm-chip-ok" : ""}" style="height:auto;min-height:32px;justify-content:flex-start;align-items:flex-start;padding:4px 7px;font-size:11px;">
+                  <span style="font-weight:700;flex-shrink:0;min-width:14px;">${letter}.</span>
+                  <span style="line-height:1.4;">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span>
                 </div>`;
                 })
                 .join("")}
@@ -568,8 +530,8 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
 
           if (viewMode === 3) {
             html += `
-              <div style="padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:6px;font-size:11px;color:#999;line-height:1.5;">
-                <div style="font-weight:600;color:#4CAF50;margin-bottom:4px;font-size:10px;display:flex;align-items:center;gap:4px;">
+              <div class="mm-card-outline" style="padding:8px 10px;font-size:11px;line-height:1.5;">
+                <div class="mm-eyebrow" style="margin-bottom:4px;font-size:10px;display:flex;align-items:center;gap:4px;">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                   PENJELASAN AI
                 </div>
@@ -592,16 +554,14 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
         const infoBtn = element.querySelector(".info-button");
         if (infoBtn) {
           infoBtn.addEventListener("mouseenter", () => {
-            infoBtn.style.backgroundColor = "#4CAF50";
-            infoBtn.style.color = "#fff";
             const tooltip = document.createElement("div");
-            tooltip.className = "q-tooltip explanation-tooltip";
+            tooltip.className = "mm-card-elev mm-scroll explanation-tooltip";
             tooltip.style =
-              "position:fixed;width:320px;padding:12px;background:#1e1e1e;border:1px solid #444;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.5);z-index:10001;font-size:12px;white-space:pre-wrap;max-height:350px;overflow-y:auto;line-height:1.5;";
+              "position:fixed;width:320px;padding:12px;z-index:10001;font-size:12px;white-space:pre-wrap;max-height:350px;overflow-y:auto;line-height:1.5;";
             tooltip.innerHTML = `
-              <div style="font-weight:600;color:#4CAF50;margin-bottom:6px;">💡 Penjelasan AI:</div>
-              <div style="color:#ccc;">${explanation.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</div>
-              <div style="margin-top:8px;padding-top:8px;border-top:1px solid #333;font-size:10px;color:#666;">⚠️ Jawaban AI mungkin tidak selalu tepat.</div>`;
+              <div class="mm-eyebrow" style="margin-bottom:6px;">💡 Penjelasan AI:</div>
+              <div>${explanation.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</div>
+              <div class="mm-subtitle" style="margin-top:8px;padding-top:8px;font-size:10px;">⚠️ Jawaban AI mungkin tidak selalu tepat.</div>`;
             document.body.appendChild(tooltip);
 
             const btnRect = infoBtn.getBoundingClientRect();
@@ -614,14 +574,12 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
               ) + "px";
           });
           infoBtn.addEventListener("mouseleave", () => {
-            infoBtn.style.backgroundColor = "#333";
-            infoBtn.style.color = "#aaa";
             document.querySelector(".explanation-tooltip")?.remove();
           });
         }
       } else {
-        element.style.borderLeftColor = "#f44336";
-        element.innerHTML = `<div style="color:#fff;font-size:12px;padding:4px 0;">${number}. <span style="color:#f44336;font-weight:500;">Gagal mendapatkan jawaban</span></div>`;
+        element.style.borderLeftColor = "var(--mm-error)";
+        element.innerHTML = `<div style="font-size:12px;padding:4px 0;">${number}. <span style="font-weight:500;">Gagal mendapatkan jawaban</span></div>`;
       }
     },
   };
@@ -714,7 +672,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
           const formatted = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
           if (progressText) {
             progressText.textContent = `⏱️ Menunggu ${formatted} sebelum menyelesaikan quiz...`;
-            progressText.style.color = "#f0872d";
+            progressText.style.color = "var(--mm-primary)";
           }
           await new Promise((r) => setTimeout(r, 1000));
           remaining--;
@@ -723,7 +681,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
 
       if (progressText) {
         progressText.textContent = "🚀 Menyelesaikan quiz...";
-        progressText.style.color = "#38bdf8";
+        progressText.style.color = "var(--mm-tertiary)";
       }
 
       try {
@@ -743,7 +701,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
           if (progressText) {
             progressText.textContent =
               "🎉 Quiz Berhasil Diselesaikan!";
-            progressText.style.color = "#4CAF50";
+            progressText.style.color = "var(--mm-primary)";
           }
           setTimeout(() => location.reload(), 2000);
         } else {
@@ -752,7 +710,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
       } catch (err) {
         if (progressText) {
           progressText.textContent = `❌ Gagal menyelesaikan quiz: ${err.message}`;
-          progressText.style.color = "#f44336";
+          progressText.style.color = "var(--mm-error)";
         }
       }
     },
@@ -882,13 +840,9 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
           const btn = document.getElementById("copy-all-questions");
           if (btn) {
             const orig = btn.innerHTML;
-            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
-            btn.style.color = "#4CAF50";
-            btn.style.borderColor = "#4CAF50";
+            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
             setTimeout(() => {
-              btn.innerHTML = orig;
-              btn.style.color = "#ccc";
-              btn.style.borderColor = "#444";
+              if (btn.isConnected) btn.innerHTML = orig;
             }, 2000);
           }
         })
@@ -985,7 +939,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
         );
 
         if (options.length === 0) {
-          questionItem.innerHTML = `<small>${i + 1}. <span style="color:#ff6b6b;">Tidak ada pilihan</span></small>`;
+          questionItem.innerHTML = `<small>${i + 1}. <span>Tidak ada pilihan</span></small>`;
           continue;
         }
 
@@ -1040,7 +994,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
         this.allAnswered = true;
         progressText.textContent =
           "✅ Semua jawaban ditemukan! Mulai menjawab...";
-        progressText.style.color = "#4CAF50";
+        progressText.style.color = "var(--mm-primary)";
         if (document.getElementById("auto-answer")?.checked) {
           setTimeout(
             () => QuizEngine.sequentiallyAnswerAllQuestions(this.questionData),
@@ -1051,7 +1005,7 @@ Berikan penjelasan ringkas per soal sebelum rekap.`;
         progressBar.style.width = "100%";
         const pct = Math.round((answeredCount / quizData.data.length) * 100);
         progressText.textContent = `${pct}% (${answeredCount}/${quizData.data.length}) jawaban ditemukan`;
-        progressText.style.color = newFound ? "#4CAF50" : "#aaa";
+        progressText.style.color = newFound ? "var(--mm-primary)" : "";
       }
     },
 

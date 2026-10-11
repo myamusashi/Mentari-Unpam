@@ -4,15 +4,8 @@ if (window.location.href === "https://mentari.unpam.ac.id/login") {
   (function () {
     console.log("Ekstensi berjalan di mentari.unpam.ac.id");
 
-    // Injeksi Material Symbols dari Google Fonts (fonts.gstatic.com diizinkan CSP)
-    if (!document.getElementById("material-icons-css")) {
-      const link = document.createElement("link");
-      link.id = "material-icons-css";
-      link.rel = "stylesheet";
-      link.href =
-        "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,0,0";
-      document.head.appendChild(link);
-    }
+    // Shared M3 foundation (font + tokens); per-file loaders delegate to it.
+    if (window.MentariM3) window.MentariM3.ensure();
 
     // Tambahkan CSS animasi kilau inner sweep untuk tombol toggle
     const style = document.createElement("style");
@@ -205,12 +198,13 @@ if (window.location.href === "https://mentari.unpam.ac.id/login") {
             // Extension context invalidated, fallback ke path relatif
           }
           changelog.innerHTML = `
-            <div style="width:100%; box-sizing:border-box; overflow:hidden; border-radius:16px; border:1px solid rgba(240,135,45,0.28); box-shadow:0 10px 28px rgba(0,0,0,0.12);">
-              <iframe src="${petUrl}" style="width:100%; height:360px; border:none; display:block; overflow:hidden;" title="Mentari Fox Playground"></iframe>
+            <div class="mm mm-card mm-card-elev" style="width:100%;box-sizing:border-box;overflow:hidden;border-radius:16px;">
+              <iframe src="${petUrl}" style="width:100%; height:360px; border:none; display:block; overflow:hidden;" title="Mentari Pet Playground"></iframe>
             </div>
           `;
+          if (window.MentariM3) window.MentariM3.applyTheme(changelog);
           courseContainer.parentNode.insertBefore(changelog, courseContainer);
-          console.log("Mentari Fox Playground injected.");
+          console.log("Mentari Pet Playground injected.");
         }
       }
     }

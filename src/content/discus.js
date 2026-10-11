@@ -4,6 +4,7 @@
  */
 
 (function () {
+  if (window.MentariM3) window.MentariM3.ensure();
   // Aturan bahasa global, dikirim sebagai system instruction ke semua provider
   // (omp + gemini) sehingga model kecil pun tidak keluar dari Bahasa Indonesia.
   const SYSTEM_PROMPT =
@@ -398,13 +399,11 @@ Jawaban lengkap:`,
       const btn = document.createElement("button");
       btn.type = "button";
       if (type === "buat") {
-        btn.className = "MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedInfo MuiButton-sizeSmall MuiButton-containedSizeSmall buat-pertanyaan-btn";
-        btn.style = "margin-right:2px;min-width:0px;padding:6px 12px;line-height:1.2;font-weight:500;border-radius:11px;background:#1e3a8a;color:#fff;border:0;display:flex;align-items:center;gap:4px;";
-        btn.innerHTML = `<span class="MuiButton-startIcon" style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span><span class="MuiButton-label">Buat Pertanyaan</span>`;
+        btn.className = "mm-btn mm-btn-sm buat-pertanyaan-btn";
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span><span>Buat Pertanyaan</span>`;
       } else {
-        btn.className = "MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedWarning MuiButton-sizeSmall MuiButton-containedSizeSmall cari-jawaban-btn";
-        btn.style = "margin-right:2px;min-width:0px;padding:6px 12px;line-height:1.2;font-weight:500;border-radius:11px;background:#41a3f1;color:rgb(255,255,255);border:0;display:flex;align-items:center;gap:4px;";
-        btn.innerHTML = `<span class="MuiButton-startIcon" style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span><span class="MuiButton-label">Cari Jawaban</span>`;
+        btn.className = "mm-btn mm-btn-sm mm-btn-tonal cari-jawaban-btn";
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span><span>Cari Jawaban</span>`;
       }
       btn.onclick = onClick;
       return btn;
@@ -414,8 +413,7 @@ Jawaban lengkap:`,
       let saranDiv = root.querySelector(".saran-pertanyaan-gemini");
       if (!saranDiv) {
         saranDiv = document.createElement("div");
-        saranDiv.className = "saran-pertanyaan-gemini";
-        saranDiv.style = "margin:10px 0 0 0;padding:10px;;border-radius:18px;border:1px solid rgba(184, 184, 184, 0.3);font-size:13px;display:flex;flex-direction:column;gap:8px;";
+        saranDiv.className = "mm-card mm-card-outline saran-pertanyaan-gemini";
         replyBtn.parentElement.parentElement.appendChild(saranDiv);
       }
       const seen = new Set();
@@ -441,15 +439,17 @@ Jawaban lengkap:`,
         qWrap.style = "display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap;";
         const textBox = document.createElement("div");
         textBox.textContent = q.trim();
-        textBox.style = "flex:1 1 200px;padding:14px 80px 14px 12px;position:relative;border-radius:10px;background: rgba(184, 184, 184, 0.3);font-size:13px;word-break:break-word;min-height:36px;text-align:justify;text-justify:inter-word;";
-        
+        textBox.className = "mm-list-item";
+        textBox.style = "flex:1 1 200px;position:relative;";
+
         const copyBtn = document.createElement("button");
-        copyBtn.style = "position:absolute;right:8px;bottom:8px;min-width:0px;padding:8px;line-height:1.2;font-weight:500;border-radius:9px;background:#79bb7c;color:#fff;border:0;display:flex;align-items:center;gap:4px;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,0.07);";
-        copyBtn.innerHTML = `<span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><span class="MuiButton-label">Copy</span>`;
+        copyBtn.className = "mm-btn mm-btn-sm mm-btn-tonal";
+        copyBtn.style = "position:absolute;right:8px;bottom:8px;z-index:2;";
+        copyBtn.innerHTML = `<span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><span>Copy</span>`;
         copyBtn.onclick = () => {
           navigator.clipboard.writeText(q.trim());
-          copyBtn.querySelector(".MuiButton-label").innerText = "Copied!";
-          setTimeout(() => copyBtn.querySelector(".MuiButton-label").innerText = "Copy", 1200);
+          copyBtn.querySelector("span:last-child").innerText = "Copied!";
+          setTimeout(() => copyBtn.querySelector("span:last-child").innerText = "Copy", 1200);
         };
         textBox.appendChild(copyBtn);
         qWrap.appendChild(textBox);
@@ -465,8 +465,7 @@ Jawaban lengkap:`,
       let resultDiv = root.querySelector(".jawaban-gemini");
       if (!resultDiv) {
         resultDiv = document.createElement("div");
-        resultDiv.className = "jawaban-gemini";
-        resultDiv.style = "margin:10px 0 0 0;padding:10px;border-radius:18px;border:1px solid rgba(184, 184, 184, 0.3);font-size:13px;display:flex;flex-direction:column;gap:8px;text-align:justify;text-justify:inter-word;";
+        resultDiv.className = "mm-card mm-card-outline jawaban-gemini";
         replyBtn.parentElement.parentElement.appendChild(resultDiv);
       }
       resultDiv.innerHTML = "";
@@ -479,8 +478,8 @@ Jawaban lengkap:`,
       // Kalau rewrite juga gagal, jangan diam-diam menampilkan teks rusak.
       if (Utils.englishTokenRatio(jawaban) > FOREIGN_TOKEN_RATIO) {
         const warn = document.createElement("div");
+        warn.className = "mm-chip mm-chip-warn";
         warn.textContent = "Hasil AI masih tercampur kata asing sehingga kalimatnya kurang tepat. Silakan ulangi, atau ganti model di Pengaturan (Mentari Mod).";
-        warn.style = "padding:6px 8px;border-radius:8px;background:rgba(255,167,38,0.14);color:#ffb74d;font-size:12px;";
         resultDiv.appendChild(warn);
       }
       
@@ -488,18 +487,19 @@ Jawaban lengkap:`,
       btnRow.style = "display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;";
       
       const copyBtn = document.createElement("button");
-      copyBtn.style = "margin-right:0;min-width:0px;padding:6px 10px;line-height:1.2;font-weight:500;border-radius:11px;background:#79bb7c;color:#fff;border:0;display:flex;align-items:center;gap:4px;";
-      copyBtn.innerHTML = `<span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><span class="MuiButton-label">Copy</span>`;
+      copyBtn.className = "mm-btn mm-btn-text";
+      copyBtn.innerHTML = `<span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><span>Copy</span>`;
       copyBtn.onclick = () => {
-        copyBtn.querySelector(".MuiButton-label").innerText = "Copied!";
-        setTimeout(() => copyBtn.querySelector(".MuiButton-label").innerText = "Copy", 1200);
+        copyBtn.querySelector("span:last-child").innerText = "Copied!";
+        setTimeout(() => copyBtn.querySelector("span:last-child").innerText = "Copy", 1200);
       };
       btnRow.appendChild(copyBtn);
 
       const modes = [{m:"shorten", l:"Ringkas"}, {m:"paragraph", l:"1 Paragraf"}, {m:"clarify", l:"Perjelas"}, {m:"lengthen", l:"Perpanjang"}, {m:"numbered", l:"Nomor"}];
       modes.forEach(({m, l}) => {
         const btn = document.createElement("button");
-        btn.innerHTML = `<span class="MuiButton-label">${l}</span>`;
+        btn.className = "mm-btn mm-btn-sm mm-btn-tonal";
+        btn.innerHTML = `<span>${l}</span>`;
         btn.onclick = async () => {
           btn.disabled = true;
           btn.innerText = "Memproses...";
